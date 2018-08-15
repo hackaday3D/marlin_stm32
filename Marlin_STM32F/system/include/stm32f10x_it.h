@@ -64,7 +64,8 @@ char pinMode(int pin_number, unsigned char pin_status);
 u8 SD_SendCmd(u8 cmd, u32 arg, u8 crc);
 unsigned int millis(void);
 void millis_count_init(void);
-void motor_next_isr(int time_n);
+void motor_next_isr(u16 time_n);
+void Step_Timer_Config(void) ;
 
 }
 #endif /* __STM32_IT_H */

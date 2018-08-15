@@ -194,7 +194,7 @@ class Temperature {
 
     FORCE_INLINE static bool hotEnoughToExtrude(const uint8_t e) { return !tooColdToExtrude(e); }
     FORCE_INLINE static bool targetHotEnoughToExtrude(const uint8_t e) { return !targetTooColdToExtrude(e); }
-
+    void ISR_temperature(void) {  isr(); }
   private:
 ///////////////////robert
 

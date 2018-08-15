@@ -122,7 +122,7 @@ FORCE_INLINE void HAL_timer_start(const uint8_t timer_num, const uint32_t freque
 #define TIMER_COUNTER_0         TCNT0
 
 #define _CAT(a, ...) a ## __VA_ARGS__
-#define HAL_timer_set_compare(timer, compare) (_CAT(TIMER_OCR_, timer) = compare)
+#define HAL_timer_set_compare(timer, compare)   motor_next_isr( compare)//(_CAT(TIMER_OCR_, timer) = compare)
 #define HAL_timer_restrain(timer, interval_ticks) NOLESS(_CAT(TIMER_OCR_, timer), _CAT(TIMER_COUNTER_, timer) + interval_ticks)
 
 #define HAL_timer_get_compare(timer) _CAT(TIMER_OCR_, timer)

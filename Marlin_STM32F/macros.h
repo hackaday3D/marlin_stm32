@@ -64,10 +64,6 @@
 #define strstr_P  strstr
 #define strlen_P  strlen
 
-char eeprom_write_byte( uint8_t *addr, int len);
-
-unsigned char eeprom_read_byte( uint8_t *  addr);
-unsigned char eeprom_read_block(uint8_t *buf,uint8_t *addr, int len);
 //uint32_t pgm_read_dword_near(  uint32_t *b);
 ////////
 

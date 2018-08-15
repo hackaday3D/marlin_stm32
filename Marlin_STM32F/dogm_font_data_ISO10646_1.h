@@ -31,7 +31,7 @@
   X Font      ascent = 7 descent=-1
   Max Font    ascent = 8 descent=-1
 */
-#include <U8glib.h>
+#include "U8glib.h"
 
 #if defined(__AVR__) && ENABLED(NOT_EXTENDED_ISO10646_1_5X7)
 

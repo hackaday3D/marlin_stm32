@@ -43,7 +43,7 @@
 
 #include "MarlinConfig.h"
 
-#include <U8glib.h>
+#include "U8glib.h"
 
 #include "ultralcd.h"
 #include "dogm_bitmaps.h"

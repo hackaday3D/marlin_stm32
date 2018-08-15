@@ -278,21 +278,8 @@
   int PORTE,PORTD,DDRF,PINF7,PINL1,PINC3,DDRC,PORTJ,DIDR0,OCR0B,PINB,PORTA,PINA,PINA2,PINA6,PORTL,OCIE0B,TIMSK0,OCIE1A,TCNT1,PINL3,PINA4,PORTF,PINF,PINF6,PINF0;
   int DDRJ,PINJ1,DDRD,PIND3,PIND,PIND7,PINF2,PINK,PORTK,PINK0,ADC,REFS0,ADMUX,ADCSRB,PINH5,PORTH,PINH,DDRA,PINC7,PINJ;
 
-/*unsigned char pgm_read_byte(  char *b)  { return 1;}
-unsigned char pgm_read_byte_near(  char *b)  { return 1;}
 
-unsigned short pgm_read_word(  unsigned short *b)  { return 1;}
-//float pgm_read_float(  int  b)  { return 1.1;}
-float pgm_read_float_near(  float *b)  { return 1.1;}
-unsigned short pgm_read_word_near(   unsigned short *b)  { return 1;}
-*/
-char eeprom_write_byte( uint8_t *addr, int len){ return 0;}
 
-unsigned char eeprom_read_byte( uint8_t *  addr){ return 0; }
-unsigned char eeprom_read_block(uint8_t *buf,uint8_t *addr, int len)
-{
-	return 0;
-}
 //uint32_t pgm_read_dword_near(  uint32_t *b)  { return 1;}
 uint8_t constrain(uint8_t a,uint8_t b,uint8_t c)
 {
@@ -324,12 +311,13 @@ FORCE_INLINE void serialprintPGM(const char* str) {
 //	while (char ch = pgm_read_byte((char *)str++)) 
     customizedSerial.write(str);
 }
+  
 void delay(int ms)  
 {
    u16 i=0;
    while(ms--)
    {
-	  i=300;  //
+	  i=200;  //
 	  while(i--) ;
    }
 }
@@ -14684,7 +14672,7 @@ void setup() {
   lcd_reset_status();
 
   #if ENABLED(SHOW_BOOTSCREEN)
-    lcd_bootscreen();
+   //robert lcd_bootscreen();
   #endif
 
   #if ENABLED(MIXING_EXTRUDER) && MIXING_VIRTUAL_TOOLS > 1

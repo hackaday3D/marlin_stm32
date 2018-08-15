@@ -241,11 +241,11 @@ static void lcd_set_custom_characters(
       0,
       0,
       0,
-    /*  0B11100,
-      0B11100,
-      0B01100,
-      0B00100,
-      0B00100*/
+      28,
+      28,
+      12,
+      4,
+      4 
     }, {
       4,
       2,
@@ -269,69 +269,69 @@ static void lcd_set_custom_characters(
 
   // CHARSET_INFO
   const static PROGMEM byte bedTemp[8] = {
-   /* 0B00000,
-    0B11111,
-    0B10101,
-    0B10001,
-    0B10101,
-    0B11111,
-    0B00000,*/
+    0,
+    31,
+    21,
+    17,
+    21,
+    31,
+    0 
     
   };
 
   const static PROGMEM byte degree[8] = {
-   /* 0B01100,
-    0B10010,
-    0B10010,
-    0B01100,
-    0B00000,
-    0B00000,
-    0B00000,
-    0B00000*/
+    12,
+    18,
+    18,
+    12,
+    0,
+    0,
+    0,
+    0 
   };
 
   const static PROGMEM byte thermometer[8] = {
-  /*  0B00100,
-    0B01010,
-    0B01010,
-    0B01010,
-    0B01010,
-    0B10001,
-    0B10001,
-    0B01110*/
+     4,
+    10,
+    10,
+    10,
+    10,
+    17,
+    17,
+    14 
   };
 
   const static PROGMEM byte uplevel[8] = {
-    /*0B00100,
-    0B01110,
-    0B11111,
-    0B00100,
-    0B11100,
-    0B00000,
-    0B00000,
-    0B00000*/
+    4,
+    14,
+    31,
+    4,
+    28,
+    0,
+    0,
+    0
   };
 
   const static PROGMEM byte feedrate[8] = {
-    /*0B11100,
-    0B10000,
-    0B11000,
-    0B10111,
-    0B00101,
-    0B00110,
-    0B00101,
-    0B00000*/
+    28,
+    16,
+    24,
+    23,
+    5,
+    6,
+    5,
+    0
   };
 
   const static PROGMEM byte clock[8] = {
-   /* 0B00000,
-    0B01110,
-    0B10011,
-    0B10101,
-    0B10001,
-    0B01110,
-    0B00000,
-    0B00000*/
+    0,
+    14,
+    19,
+    21,
+    17,
+    14,
+    0,
+    0
   };
 
   #if ENABLED(LCD_PROGRESS_BAR)

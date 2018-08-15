@@ -73,7 +73,7 @@
   #endif
   uint8_t status_scroll_offset = 0;
 #else
-  #define MAX_MESSAGE_LENGTH CHARSIZE * (LCD_WIDTH)
+  #define MAX_MESSAGE_LENGTH   CHARSIZE * (LCD_WIDTH)
 #endif
 
 char lcd_status_message[MAX_MESSAGE_LENGTH + 1];
@@ -94,7 +94,7 @@ uint8_t lcd_status_update_delay = 1, // First update one loop delayed
 
 #if ENABLED(DOGLCD)
   #include "ultralcd_impl_DOGM.h"
-  #include <U8glib.h>
+  #include "U8glib.h"
   bool drawing_screen, first_page; // = false
 #else
   #include "ultralcd_impl_HD44780.h"
@@ -5008,6 +5008,7 @@ void lcd_init() {
     #endif
 
     #if ENABLED(REPRAPWORLD_KEYPAD) && DISABLED(ADC_KEYPAD)
+      rer
       SET_OUTPUT(SHIFT_CLK);
       OUT_WRITE(SHIFT_LD, HIGH);
       SET_INPUT_PULLUP(SHIFT_OUT);
@@ -5160,7 +5161,7 @@ void lcd_update() {
   #if ENABLED(SDSUPPORT) && PIN_EXISTS(SD_DETECT)
 
     const uint8_t sd_status = (uint8_t)IS_SD_INSERTED;
-    if (sd_status != lcd_sd_status && lcd_detected()) {
+    if (sd_status != lcd_sd_status  && lcd_detected()  ) {
 
       uint8_t old_sd_status = lcd_sd_status; // prevent re-entry to this block!
       lcd_sd_status = sd_status;
@@ -5673,7 +5674,7 @@ void lcd_reset_alert_level() { lcd_status_message_level = 0; }
   #if (ENABLED(LCD_I2C_TYPE_MCP23017) || ENABLED(LCD_I2C_TYPE_MCP23008)) && ENABLED(DETECT_DEVICE)
     bool lcd_detected() { return lcd.LcdDetected() == 1; }
   #else
-    bool lcd_detected() { return true; }
+     bool lcd_detected() { return true; }
   #endif
 
   #if ENABLED(G26_MESH_VALIDATION)

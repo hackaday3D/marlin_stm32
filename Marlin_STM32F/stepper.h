@@ -495,7 +495,8 @@ class Stepper {
       constexpr uint32_t min_step_rate = F_CPU / 500000U;
       NOLESS(step_rate, min_step_rate);
       step_rate -= min_step_rate; // Correct for minimal speed
-      if (step_rate >= (8 * 256)) { // higher step rate
+      if (step_rate >= (8 * 256))
+      { // higher step rate
 
         const uint8_t tmp_step_rate = (step_rate & 0x00FF);
         const uint32_t table_address = (uint32_t)&speed_lookuptable_fast[(uint8_t)(step_rate >> 8)][0],

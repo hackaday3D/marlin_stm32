@@ -379,15 +379,28 @@ sdsd
         #define DOGLCD_SCK      23
         #define DOGLCD_A0       LCD_PINS_DC
       #else //stm32
-        #define LCD_PINS_RS     0xE6 //T_PEN
-        #define LCD_PINS_ENABLE 0xEE //D11
-        #define LCD_PINS_D4     0xD8 //D13
-        #define LCD_PINS_D5     0xD9 //D14
-        #define LCD_PINS_D6     0xDA //D15
+	  	#ifdef REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
+	        #define LCD_PINS_RS     0xDA//0xE6 //T_PEN
+	        #define LCD_PINS_ENABLE 0xEF //D11
+	        #define LCD_PINS_D4     0xD9 //D13
+        #else
+			#define LCD_PINS_RS     0xE6 //T_PEN
+	        #define LCD_PINS_ENABLE 0xEE //D11
+	        #define LCD_PINS_D4     0xD8 //D13
+	        #define LCD_PINS_D5     0xD9 //D14
+	        #define LCD_PINS_D6     0xDA //D15
+			#define LCD_PINS_D7     0xEF//D12
+
+		#endif
+       //
 		 
+/////////
+
+
+////////
       #endif
 
-      #define LCD_PINS_D7       0xEF//D12
+     // 
 
       #if DISABLED(NEWPANEL)
         #define BEEPER_PIN      0xEC
@@ -420,13 +433,14 @@ sdsd
         #define BTN_EN1         17
         #define BTN_EN2         23
       #else
-        #define BTN_EN1         31
-        #define BTN_EN2         33
+		#define BTN_EN1         0xE9
+        #define BTN_EN2         0xE8
+
       #endif
 
-      #define BTN_ENC           35
-      #define SD_DETECT_PIN     49
-      #define KILL_PIN          41
+	  #define BTN_ENC         0xED
+      #define SD_DETECT_PIN     0xC7//49
+     //luojin #define KILL_PIN          41
 
       #if ENABLED(BQ_LCD_SMART_CONTROLLER)
         #define LCD_BACKLIGHT_PIN 39

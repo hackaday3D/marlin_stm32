@@ -38,7 +38,8 @@
 
 // Change EEPROM version if the structure changes
 #define EEPROM_VERSION "V55"
-#define EEPROM_OFFSET 100
+#define EEPROM_OFFSET 0X0807F800//luojin  100
+#define HARDWARE_VERSION_ADDR  0X0807F5E0  
 
 // Check the integrity of data offsets.
 // Can be disabled for production build.
@@ -54,6 +55,7 @@
 #include "stepper.h"
 #include "parser.h"
 #include "vector_3.h"
+#include "stmflash.h"
 
 #if ENABLED(MESH_BED_LEVELING)
   #include "mesh_bed_leveling.h"
@@ -358,11 +360,13 @@ void MarlinSettings::postprocess() {
 
   void MarlinSettings::write_data(int &pos, const uint8_t *value, uint16_t size, uint16_t *crc) {
     if (eeprom_error) { pos += size; return; }
+
     while (size--) {
       uint8_t * const p = (uint8_t * const)pos;
       uint8_t v = *value;
       // EEPROM has only ~100,000 write cycles,
       // so only write bytes that have changed!
+
       if (v != eeprom_read_byte(p)) {
         eeprom_write_byte(p, v);
         if (eeprom_read_byte(p) != v) {
@@ -372,10 +376,12 @@ void MarlinSettings::postprocess() {
           return;
         }
       }
+
       crc16(crc, &v, 1);
       pos++;
       value++;
     };
+
   }
 
   void MarlinSettings::read_data(int &pos, uint8_t* value, uint16_t size, uint16_t *crc, const bool force/*=false*/) {

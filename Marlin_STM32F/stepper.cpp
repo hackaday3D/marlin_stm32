@@ -1142,8 +1142,8 @@ HAL_STEP_TIMER_ISR {
   HAL_timer_isr_epilogue(STEP_TIMER_NUM);
 }
 #endif
-//robert
-#define MultiU24X32toH16(longIn1, longIn2)  (longIn1 * longIn2 >> 24)
+//robert  float y=(float)acceleration_time* (float)current_block->acceleration_rate/0xFFFFFF;
+#define MultiU24X32toH16(longIn1, longIn2)  ((float)longIn1 * (float)longIn2/0xFFFFFF)
 #define STEP_MULTIPLY(A,B) MultiU24X32toH16(A, B)
 
 void Stepper::isr() {
@@ -1152,8 +1152,10 @@ void Stepper::isr() {
   // Program timer compare for the maximum period, so it does NOT
   // flag an interrupt while this ISR is running - So changes from small
   // periods to big periods are respected and the timer does not reset to 0
+#if STM32_LJ
+#else
   HAL_timer_set_compare(STEP_TIMER_NUM, HAL_TIMER_TYPE_MAX);
-
+#endif
   // Count of ticks for the next ISR
   hal_timer_t next_isr_ticks = 0;
 
@@ -1167,7 +1169,8 @@ void Stepper::isr() {
     ENABLE_ISRS();
 
     // Run main stepping pulse phase ISR if we have to
-    if (!nextMainISR) Stepper::stepper_pulse_phase_isr();
+    if (!nextMainISR)
+    	Stepper::stepper_pulse_phase_isr();
 
     #if ENABLED(LIN_ADVANCE)
       // Run linear advance stepper ISR if we have to
@@ -1177,7 +1180,8 @@ void Stepper::isr() {
     // ^== Time critical. NOTHING besides pulse generation should be above here!!!
 
     // Run main stepping block processing ISR if we have to
-    if (!nextMainISR) nextMainISR = Stepper::stepper_block_phase_isr();
+    if (!nextMainISR)
+    	nextMainISR = Stepper::stepper_block_phase_isr();
 
     uint32_t interval =
       #if ENABLED(LIN_ADVANCE)
@@ -1403,7 +1407,7 @@ void Stepper::stepper_pulse_phase_isr() {
     // For minimum pulse time wait after stopping pulses also
     if (events_to_do) {
       // Just wait for the requested pulse duration
-      while (HAL_timer_get_count(PULSE_TIMER_NUM) < pulse_end) { /* nada */ }
+      //robert while (HAL_timer_get_count(PULSE_TIMER_NUM) < pulse_end) { /* nada */ }
       #if MINIMUM_STEPPER_PULSE
         // Add to the value, the time that the pulse must be active (to be used on the next loop)
         pulse_end += hal_timer_t(MIN_PULSE_TICKS);
@@ -1491,6 +1495,7 @@ uint32_t Stepper::stepper_block_phase_isr() {
 
           // Using the old trapezoidal control
           step_rate = STEP_MULTIPLY(deceleration_time, current_block->acceleration_rate);
+         // step_rate =  deceleration_time*current_block->acceleration_rate>>24;
           if (step_rate < acc_step_rate) { // Still decelerating?
             step_rate = acc_step_rate - step_rate;
             NOLESS(step_rate, current_block->final_rate);
@@ -2050,7 +2055,9 @@ void Stepper::init() {
   #endif
 
   // Init Stepper ISR to 122 Hz for quick starting
+
   HAL_timer_start(STEP_TIMER_NUM, 122); // OCR1A = 0x4000
+
 
   ENABLE_STEPPER_DRIVER_INTERRUPT();
 

@@ -1929,7 +1929,7 @@ void Temperature::readings_ready() {
  *  - Call planner.tick to count down its "ignore" time
  */
 #if STM32_LJ
-void ISR_temperature(void) { Temperature::isr(); }
+//void ISR_temperature(void) { Temperature::isr(); }
 #else
 
 HAL_TEMP_TIMER_ISR {

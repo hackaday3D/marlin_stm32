@@ -38,7 +38,6 @@
 #ifndef CONFIGURATION_H
 #define CONFIGURATION_H
 #define CONFIGURATION_H_VERSION 010109
-
 //===========================================================================
 //============================= Getting Started =============================
 //===========================================================================
@@ -380,9 +379,9 @@
  // #define  DEFAULT_Ki 1.08
  // #define  DEFAULT_Kd 114
   
-#define  DEFAULT_Kp 11.93
+#define  DEFAULT_Kp 7.93
 #define  DEFAULT_Ki 0.59
-#define  DEFAULT_Kd 59.89
+#define  DEFAULT_Kd 440.89
 
   // MakerGear
   //#define DEFAULT_Kp 7.0
@@ -1220,7 +1219,7 @@
 // M501 - reads parameters from EEPROM (if you need reset them after you changed them temporarily).
 // M502 - reverts to the default "factory settings".  You still need to store them in EEPROM afterwards if you want to.
 //
-//#define EEPROM_SETTINGS // Enable for M500 and M501 commands
+#define EEPROM_SETTINGS // Enable for M500 and M501 commands
 //#define DISABLE_M503    // Saves ~2700 bytes of PROGMEM. Disable for release!
 #define EEPROM_CHITCHAT   // Give feedback on EEPROM commands. Disable to save PROGMEM.
 
@@ -1653,7 +1652,7 @@
 // RepRapDiscount FULL GRAPHIC Smart Controller
 // http://reprap.org/wiki/RepRapDiscount_Full_Graphic_Smart_Controller
 //
-//#define REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
+#define REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
 
 //
 // ReprapWorld Graphical LCD

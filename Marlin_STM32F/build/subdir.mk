@@ -16,6 +16,7 @@ CPP_SRCS += \
 ../SdFatUtil.cpp \
 ../SdFile.cpp \
 ../SdVolume.cpp \
+../U8glib.cpp \
 ../blinkm.cpp \
 ../cardreader.cpp \
 ../configuration_store.cpp \
@@ -70,6 +71,7 @@ OBJS += \
 ./SdFatUtil.o \
 ./SdFile.o \
 ./SdVolume.o \
+./U8glib.o \
 ./blinkm.o \
 ./cardreader.o \
 ./configuration_store.o \
@@ -124,6 +126,7 @@ CPP_DEPS += \
 ./SdFatUtil.d \
 ./SdFile.d \
 ./SdVolume.d \
+./U8glib.d \
 ./blinkm.d \
 ./cardreader.d \
 ./configuration_store.d \
@@ -170,7 +173,7 @@ CPP_DEPS += \
 %.o: ../%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GNU ARM Cross C++ Compiler'
-	arm-none-eabi-g++ -mcpu=cortex-m3 -mthumb --specs=nosys.specs -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -ffreestanding -fno-move-loop-invariants -Wall -Wextra  -g3 -DDEBUG -DUSE_FULL_ASSERT -DTRACE -DOS_USE_TRACE_SEMIHOSTING_DEBUG -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -DHSE_VALUE=8000000 -I"../include" -I"../system/include" -I"../system/include/cmsis" -I"../system/include/stm32f1-stdperiph" -std=gnu++0x -fabi-version=0 -fno-exceptions -fno-rtti -fno-use-cxa-atexit -fno-threadsafe-statics -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -c -o "$@" "$<"
+	arm-none-eabi-g++ -mcpu=cortex-m3 -mthumb --specs=nosys.specs -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -ffreestanding -fno-move-loop-invariants -Wall -Wextra  -g3 -DDEBUG -DUSE_FULL_ASSERT -DTRACE -DOS_USE_TRACE_SEMIHOSTING_DEBUG -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -DHSE_VALUE=8000000 -I"../include" -I"E:\luojin\GTM32\M32\marlin_main\utility" -I"../system/include" -I"../system/include/cmsis" -I"../system/include/stm32f1-stdperiph" -std=gnu++0x -fabi-version=0 -fno-exceptions -fno-rtti -fno-use-cxa-atexit -fno-threadsafe-statics -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -c -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

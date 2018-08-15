@@ -23,7 +23,7 @@
 #ifndef ULCDST7920_H
 #define ULCDST7920_H
 
-#include <U8glib.h>
+#include "U8glib.h"
 #include "delay.h"
 
 #define ST7920_CLK_PIN  LCD_PINS_D4
@@ -48,7 +48,7 @@
 #if F_CPU >= 20000000
   #define CPU_ST7920_DELAY_1 DELAY_NS(0)
   #define CPU_ST7920_DELAY_2 DELAY_NS(0)
-  #define CPU_ST7920_DELAY_3 DELAY_NS(50)
+  #define CPU_ST7920_DELAY_3 DELAY_NS(0)
 #elif MB(3DRAG) || MB(K8200) || MB(K8400) || MB(SILVER_GATE)
   #define CPU_ST7920_DELAY_1 DELAY_NS(0)
   #define CPU_ST7920_DELAY_2 DELAY_NS(188)
@@ -83,9 +83,15 @@
   #define ST7920_DELAY_3 CPU_ST7920_DELAY_3
 #endif
 
+////luojin
+  #define ST7920_DELAY_1 CPU_ST7920_DELAY_1
+  #define ST7920_DELAY_2 CPU_ST7920_DELAY_2
+  #define ST7920_DELAY_3 CPU_ST7920_DELAY_3
+
+
 #define ST7920_SND_BIT \
   WRITE(ST7920_CLK_PIN, LOW);        ST7920_DELAY_1; \
-  WRITE(ST7920_DAT_PIN, val & 0x80); ST7920_DELAY_2; \
+  WRITE(ST7920_DAT_PIN, (val & 0x80)>>7); ST7920_DELAY_2; \
   WRITE(ST7920_CLK_PIN, HIGH);       ST7920_DELAY_3; \
   val <<= 1
 

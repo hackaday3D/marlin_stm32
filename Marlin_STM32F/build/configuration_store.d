@@ -39,7 +39,9 @@ configuration_store.o: ../configuration_store.cpp \
  ../system/include/stm32f1-stdperiph/stm32f10x_usart.h ../endstops.h \
  ../planner.h ../temperature.h ../thermistortables.h \
  ../thermistortable_1.h ../ultralcd.h ../stepper.h ../speed_lookuptable.h \
- ../stepper_indirection.h ../parser.h ../vector_3.h
+ ../stepper_indirection.h ../parser.h ../vector_3.h \
+ ../system/include/stmflash.h \
+ ../system/include/stm32f1-stdperiph/stm32f10x_flash.h
 
 ../configuration_store.h:
 
@@ -178,3 +180,7 @@ configuration_store.o: ../configuration_store.cpp \
 ../parser.h:
 
 ../vector_3.h:
+
+../system/include/stmflash.h:
+
+../system/include/stm32f1-stdperiph/stm32f10x_flash.h:
