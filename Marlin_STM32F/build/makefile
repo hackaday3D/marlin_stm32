@@ -68,14 +68,16 @@ marlin_main.elf: $(OBJS) $(USER_OBJS)
 marlin_main.hex: marlin_main.elf
 	@echo 'Invoking: GNU ARM Cross Create Flash Image'
 	arm-none-eabi-objcopy -O ihex "marlin_main.elf"  "marlin_main.hex"
+	arm-none-eabi-objcopy -I ihex --output-target=binary "marlin_main.hex" "marlin_main.bin"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 marlin_main.siz: marlin_main.elf
 	@echo 'Invoking: GNU ARM Cross Print Size'
 	arm-none-eabi-size --format=berkeley "marlin_main.elf"
-	@echo 'Finished building: $@'
-	@echo ' '
+	@echo 'Finished building:marlin_main.bin'
+	@echo  .
+	@echo  Verify success!  
 
 # Other Targets
 clean:
