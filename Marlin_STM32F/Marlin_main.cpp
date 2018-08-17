@@ -14495,10 +14495,7 @@ void stop() {
  */
 void setup() {
 
-   SystemInit();
-
-  NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0x3000);//app base addr
-  asm("CPSIE  I"); 
+  system_init_stm32();
    
   #if ENABLED(MAX7219_DEBUG)
     Max7219_init();

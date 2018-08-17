@@ -20,6 +20,7 @@
  *
  */
 
+
 /**
  * Configuration.h
  *
@@ -43,6 +44,7 @@
 //============================= Getting Started =============================
 //===========================================================================
 
+
 /**
  * Here are some standard links for getting your machine calibrated:
  *
@@ -54,7 +56,6 @@
  * https://sites.google.com/site/repraplogphase/calibration-of-your-reprap
  * http://www.thingiverse.com/thing:298812
  */
-
 //===========================================================================
 //============================= DELTA Printer ===============================
 //===========================================================================
@@ -68,7 +69,6 @@
 // For a SCARA printer start with the configuration files in
 // example_configurations/SCARA and customize for your machine.
 //
-
 // @section info
 
 // User-specified version info of this build to display in [Pronterface, etc] terminal window during

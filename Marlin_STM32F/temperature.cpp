@@ -905,10 +905,10 @@ void Temperature::manage_heater() {
 #if 1
 if(temperature_count<32)
 	  {    
-		  temperature_buffer[0][temperature_count]= Current_ADC_Raw[0];
-		  temperature_buffer[1][temperature_count]= Current_ADC_Raw[1];
-		  temperature_buffer[2][temperature_count]= Current_ADC_Raw[2];
-		  temperature_buffer[3][temperature_count]= Current_ADC_Raw[3];
+		  temperature_buffer[0][temperature_count]= Read_ADC_Raw[0];
+		  temperature_buffer[1][temperature_count]= Read_ADC_Raw[1];
+		  temperature_buffer[2][temperature_count]= Read_ADC_Raw[2];
+		  temperature_buffer[3][temperature_count]= Read_ADC_Raw[3];
 		  temperature_count++;
 	  }
   
@@ -934,7 +934,7 @@ if(temperature_count<32)
 ***********************************************************/
 float Temperature::Get_Temperature(u8 hot_heat_num)
 {
-  
+   
     u16 i = 1;
     u8 j=0,k=0;
     u16 temp=0;
