@@ -380,9 +380,9 @@ sdsd
         #define DOGLCD_A0       LCD_PINS_DC
       #else //stm32
 	  	#ifdef REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
-	        #define LCD_PINS_RS     0xDA//0xE6 //T_PEN
-	        #define LCD_PINS_ENABLE 0xEF //D11
-	        #define LCD_PINS_D4     0xD9 //D13
+	        #define LCD_PINS_RS    0xC6// 0xDA//0xE6 //T_PEN
+	        #define LCD_PINS_ENABLE 0xC7//0xEF //D11
+	        #define LCD_PINS_D4     0xC8//0xD9 //D13
         #else
 			#define LCD_PINS_RS     0xE6 //T_PEN
 	        #define LCD_PINS_ENABLE 0xEE //D11

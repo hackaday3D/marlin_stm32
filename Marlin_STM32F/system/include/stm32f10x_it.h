@@ -35,7 +35,7 @@ void system_init_stm32(void);
 unsigned int millis(void);
 void millis_count_init(void);
 void motor_next_isr(u16 time_n);
-
+char Serial_send(unsigned char buf_data);
 
 }
 #endif

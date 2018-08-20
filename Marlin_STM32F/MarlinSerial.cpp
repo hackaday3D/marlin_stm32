@@ -158,7 +158,7 @@
   }
 
   // (called with RX interrupts disabled)
-  FORCE_INLINE void store_rxd_char() {
+  FORCE_INLINE void store_rxd_char(char rec_c) {
     // Get the tail - Nothing can alter its value while this ISR is executing, but there's
     // a chance that this ISR interrupted the main process while it was updating the index.
     // The backup mechanism ensures the correct value is always returned.
@@ -193,7 +193,7 @@
     // If the character is to be stored at the index just before the tail
     // (such that the head would advance to the current tail), the RX FIFO is
     // full, so don't write the character or advance the head.
-    const char c = USART_ReceiveData(USART1);//M_UDRx;
+    const char c = rec_c;//USART_ReceiveData(USART1);//M_UDRx;
     if (i != t) {
       rx_buffer.buffer[h] = c;
       h = i;
@@ -591,8 +591,9 @@
       while (!TEST(M_UCSRxA, M_UDREx)) sw_barrier();
       M_UDRx = c;
       */
-      USART_SendData(USART1, c);
-      while( USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET );
+       Serial_send(c);
+    //  USART_SendData(USART1, c);
+     // while( USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET );
     }
 
     void MarlinSerial::flushTX(void) {

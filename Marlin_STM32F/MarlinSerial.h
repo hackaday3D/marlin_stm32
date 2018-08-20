@@ -36,7 +36,7 @@
 
 #include "MarlinConfig.h"
 
-void store_rxd_char();
+void store_rxd_char(char rec_c);
 
 #ifndef SERIAL_PORT
   #define SERIAL_PORT 0
