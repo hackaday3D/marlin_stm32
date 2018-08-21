@@ -253,7 +253,8 @@ _start (void)
   //
   // Also useful on platform with external RAM, that need to be
   // initialised before filling the BSS section.
-
+  #define NVIC_VectTab_FLASH           ((uint32_t)0x08000000)// 
+	NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0x3000);//app base addr robert
   __initialize_hardware_early ();
 
   // Use Old Style DATA and BSS section initialisation,
