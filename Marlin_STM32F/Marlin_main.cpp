@@ -14747,7 +14747,7 @@ int
 main(int argc, char* argv[])
  {
 
-	setup() ;
+   	setup() ;
 	while(1)
 	{
 
