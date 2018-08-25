@@ -7,9 +7,9 @@ planner.o: ../planner.cpp ../planner.h ../types.h ../enum.h \
  ../system/include/cmsis/system_stm32f10x.h ../drivers.h ../Version.h \
  ../Configuration.h ../Conditionals_LCD.h ../Configuration_adv.h ../HAL.h \
  ../fastio.h ../fastio_1280.h ../system/include/Arduino.h ../pins.h \
- ../pins_RAMPS.h ../Conditionals_post.h ../SanityCheck.h ../language.h \
- ../language_en.h ../utility.h ../serial.h ../MarlinSerial.h ../Marlin.h \
- ../system/include/stm32f10x_it.h \
+ ../pins_ERYONE_STM32F103.h ../Conditionals_post.h ../SanityCheck.h \
+ ../language.h ../language_en.h ../utility.h ../serial.h \
+ ../MarlinSerial.h ../Marlin.h ../system/include/stm32f10x_it.h \
  ../system/include/stm32f1-stdperiph/stm32f10x_conf.h \
  ../system/include/stm32f1-stdperiph/stm32f10x_adc.h \
  ../system/include/stm32f1-stdperiph/stm32f10x_bkp.h \
@@ -83,7 +83,7 @@ planner.o: ../planner.cpp ../planner.h ../types.h ../enum.h \
 
 ../pins.h:
 
-../pins_RAMPS.h:
+../pins_ERYONE_STM32F103.h:
 
 ../Conditionals_post.h:
 

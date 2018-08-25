@@ -20,40 +20,15 @@
  *
  */
 
-/**
- * Arduino Mega with RAMPS v1.4 (or v1.3) pin assignments
- *
- * Applies to the following boards:
- *
- *  RAMPS_14_EFB (Hotend, Fan, Bed)
- *  RAMPS_14_EEB (Hotend0, Hotend1, Bed)
- *  RAMPS_14_EFF (Hotend, Fan0, Fan1)
- *  RAMPS_14_EEF (Hotend0, Hotend1, Fan)
- *  RAMPS_14_SF  (Spindle, Controller Fan)
- *
- *  RAMPS_13_EFB (Hotend, Fan, Bed)
- *  RAMPS_13_EEB (Hotend0, Hotend1, Bed)
- *  RAMPS_13_EFF (Hotend, Fan0, Fan1)
- *  RAMPS_13_EEF (Hotend0, Hotend1, Fan)
- *  RAMPS_13_SF  (Spindle, Controller Fan)
- *
- *  Other pins_MYBOARD.h files may override these defaults
- *
- *  Differences between
- *  RAMPS_13 | RAMPS_14
- *         7 | 11
- */
 
-#if !defined(__AVR_ATmega1280__) && !defined(__AVR_ATmega2560__)
-  #error "Oops!  Make sure you have 'Arduino Mega' selected from the 'Tools -> Boards' menu."
-#endif
+
+//#if !defined(__AVR_ATmega1280__) && !defined(__AVR_ATmega2560__)
+//  #error "Oops!  Make sure you have 'Arduino Mega' selected from the 'Tools -> Boards' menu."
+//#endif
 
 #ifndef BOARD_NAME
-  #define BOARD_NAME "RAMPS 1.4"
+  #define BOARD_NAME "ERYONE,STM32F103"
 #endif
-
-dfdf
-
 //
 // Servos
 //
@@ -226,7 +201,7 @@ dfdf
   #define RAMPS_D8_PIN   0xC4  // bed pin
 #endif
 #ifndef RAMPS_D9_PIN
-  #define RAMPS_D9_PIN      9
+  #define RAMPS_D9_PIN      0xA6
 #endif
 #ifndef RAMPS_D10_PIN
   #define RAMPS_D10_PIN  0xA7// GPIOB+GPIO_Pin_0  heater pin
@@ -382,10 +357,9 @@ sdsd
         #define DOGLCD_A0       LCD_PINS_DC
       #else //stm32
 	  	#ifdef REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
-	        #define LCD_PINS_RS    0xDA//0xC6// 0xDA//0xE6 //T_PEN
-	        #define LCD_PINS_ENABLE 0xEF //0xC7//0xEF //D11
-	        #define LCD_PINS_D4      0xD9//0xC8 //D13
-
+	        #define LCD_PINS_RS     0xC6// 0xDA//0xE6 //T_PEN
+	        #define LCD_PINS_ENABLE  0xC7//0xEF //D11
+	        #define LCD_PINS_D4       0xC8 //D13
         #else
 			#define LCD_PINS_RS     0xE6 //T_PEN
 	        #define LCD_PINS_ENABLE 0xEE //D11
@@ -444,11 +418,11 @@ sdsd
 	  #define BTN_ENC         0xDD//0xED
 	  ///////////////////
         #define SD_DETECT_PIN     0xC7//49
-		#define SD_SPI_SCK   0xA5//0xB3
-		#define SD_SPI_MISO   0xA6//0xB4
-		#define SD_SPI_MOSI   0xA7//0xB5
-		#define SD_SPI_CS   0xA4//0xB6
-		#define SD_SPI_REMAP  0 
+		#define SD_SPI_SCK   0xB3
+		#define SD_SPI_MISO   0xB4
+		#define SD_SPI_MOSI   0xB5
+		#define SD_SPI_CS   0xB6
+		#define SD_SPI_REMAP  1 
 	 /////////////////////////////	
      //  #define KILL_PIN          41
 

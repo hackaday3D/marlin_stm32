@@ -7,7 +7,7 @@ mesh_bed_leveling.o: ../mesh_bed_leveling.cpp ../MarlinConfig.h \
  ../system/include/cmsis/system_stm32f10x.h ../drivers.h ../Version.h \
  ../Configuration.h ../Conditionals_LCD.h ../Configuration_adv.h \
  ../types.h ../HAL.h ../fastio.h ../fastio_1280.h \
- ../system/include/Arduino.h ../pins.h ../pins_RAMPS.h \
+ ../system/include/Arduino.h ../pins.h ../pins_ERYONE_STM32F103.h \
  ../Conditionals_post.h ../SanityCheck.h ../enum.h ../language.h \
  ../language_en.h ../utility.h ../serial.h ../MarlinSerial.h
 
@@ -51,7 +51,7 @@ mesh_bed_leveling.o: ../mesh_bed_leveling.cpp ../MarlinConfig.h \
 
 ../pins.h:
 
-../pins_RAMPS.h:
+../pins_ERYONE_STM32F103.h:
 
 ../Conditionals_post.h:
 

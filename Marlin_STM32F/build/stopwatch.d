@@ -7,8 +7,8 @@ stopwatch.o: ../stopwatch.cpp ../stopwatch.h ../macros.h \
  ../MarlinConfig.h ../boards.h ../drivers.h ../Version.h \
  ../Configuration.h ../Conditionals_LCD.h ../Configuration_adv.h ../HAL.h \
  ../fastio.h ../fastio_1280.h ../system/include/Arduino.h ../pins.h \
- ../pins_RAMPS.h ../Conditionals_post.h ../SanityCheck.h ../enum.h \
- ../language.h ../language_en.h ../utility.h ../serial.h \
+ ../pins_ERYONE_STM32F103.h ../Conditionals_post.h ../SanityCheck.h \
+ ../enum.h ../language.h ../language_en.h ../utility.h ../serial.h \
  ../MarlinSerial.h ../system/include/stm32f10x_it.h \
  ../system/include/stm32f1-stdperiph/stm32f10x_conf.h \
  ../system/include/stm32f1-stdperiph/stm32f10x_adc.h \
@@ -81,7 +81,7 @@ stopwatch.o: ../stopwatch.cpp ../stopwatch.h ../macros.h \
 
 ../pins.h:
 
-../pins_RAMPS.h:
+../pins_ERYONE_STM32F103.h:
 
 ../Conditionals_post.h:
 

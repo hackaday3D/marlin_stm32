@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
+ 
 /**
  * Include pins definitions
  *
@@ -263,6 +263,9 @@
   #include "pins_TEENSY2.h"           // AT90USB1286                                env:teensy20
 #elif MB(5DPRINT)
   #include "pins_5DPRINT.h"           // AT90USB1286                                ?env:at90USB1286_DFU
+
+#elif MB(ERYONE_STM32F103)
+  #include "pins_ERYONE_STM32F103.h"   
 
 #else
   #error "Unknown MOTHERBOARD value set in Configuration.h"

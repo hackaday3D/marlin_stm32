@@ -41,7 +41,7 @@
 
 uint8_t u8g_call_dev_fn(u8g_t *u8g, u8g_dev_t *dev, uint8_t msg, void *arg)
 {
-  return dev->dev_fn(u8g, dev, msg, arg); 
+  return dev->dev_fn(u8g, dev, msg, arg);
 }
 
 /*====================================================================*/
