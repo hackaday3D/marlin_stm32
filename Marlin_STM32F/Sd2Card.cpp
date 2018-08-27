@@ -48,7 +48,7 @@
    * Set SCK rate to F_CPU/pow(2, 1 + spiRate) for spiRate [0,6]
    */
   static void spiInit(uint8_t spiRate) {
-    SPI1_Init(1,SD_SPI_SCK,SD_SPI_MISO,SD_SPI_MOSI,SD_SPI_CS,SD_SPI_REMAP); 
+    SPIn_Init(SD_SPI_NUM,SD_SPI_SCK,SD_SPI_MISO,SD_SPI_MOSI,SD_SPI_CS,SD_SPI_REMAP); 
 	return;
 #if 0	/////////
     // See avr processor documentation
@@ -59,7 +59,7 @@
 
   /** SPI receive a byte */
   static uint8_t spiRec() {
-    return SPI1_ReadWriteByte(0xFF);
+    return SPIn_ReadWriteByte(0xFF);
 	///////////
 #if 0	
     SPDR = 0xFF;
@@ -89,7 +89,7 @@
 
   /** SPI send a byte */
   static void spiSend(uint8_t b) {
-    SPI1_ReadWriteByte(b);
+    SPIn_ReadWriteByte(b);
 	return;
 	///////////
 #if 0       
@@ -397,7 +397,7 @@ bool Sd2Card::init(uint8_t sckRateID, pin_t chipSelectPin) {
     for (uint8_t i = 0; i < 3; i++) spiRec();
   }
   chipSelectHigh();
-   SPI2_SetSpeed(SPI_BaudRatePrescaler_2);//set high speed mode
+  SPIn_SetSpeed(SPI_BaudRatePrescaler_2);//set high speed mode
 
   #if DISABLED(SOFTWARE_SPI)
     return setSckRate(sckRateID);

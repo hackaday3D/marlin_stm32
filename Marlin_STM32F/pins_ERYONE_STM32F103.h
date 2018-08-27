@@ -423,6 +423,7 @@ sdsd
 		#define SD_SPI_MOSI   0xB5
 		#define SD_SPI_CS   0xB6
 		#define SD_SPI_REMAP  1 
+		#define SD_SPI_NUM   3
 	 /////////////////////////////	
      //  #define KILL_PIN          41
 
