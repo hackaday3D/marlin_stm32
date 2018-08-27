@@ -359,7 +359,7 @@ sdsd
 	  	#ifdef REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
 	        #define LCD_PINS_RS     0xC6// 0xDA//0xE6 //T_PEN
 	        #define LCD_PINS_ENABLE  0xC7//0xEF //D11
-	        #define LCD_PINS_D4       0xC8 //D13
+	        #define LCD_PINS_D4       0xC8 //D19
         #else
 			#define LCD_PINS_RS     0xE6 //T_PEN
 	        #define LCD_PINS_ENABLE 0xEE //D11
@@ -418,11 +418,11 @@ sdsd
 	  #define BTN_ENC         0xDD//0xED
 	  ///////////////////
         #define SD_DETECT_PIN     0xC7//49
-		#define SD_SPI_SCK   0xB3
-		#define SD_SPI_MISO   0xB4
-		#define SD_SPI_MOSI   0xB5
-		#define SD_SPI_CS   0xB6
-		#define SD_SPI_REMAP  1 
+		#define SD_SPI_SCK   0xB3//0xA5//
+		#define SD_SPI_MISO   0xB4// 0xA6
+		#define SD_SPI_MOSI   0xB5//0xA7
+		#define SD_SPI_CS   0xB6//0xA4
+		#define SD_SPI_REMAP  0 
 		#define SD_SPI_NUM   3
 	 /////////////////////////////	
      //  #define KILL_PIN          41
