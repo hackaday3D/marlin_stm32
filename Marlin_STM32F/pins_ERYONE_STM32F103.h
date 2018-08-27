@@ -422,8 +422,8 @@ sdsd
 		#define SD_SPI_MISO   0xB4// 0xA6
 		#define SD_SPI_MOSI   0xB5//0xA7
 		#define SD_SPI_CS   0xB6//0xA4
-		#define SD_SPI_REMAP  0 
-		#define SD_SPI_NUM   3
+		#define SD_SPI_REMAP  1 
+		#define SD_SPI_NUM   1
 	 /////////////////////////////	
      //  #define KILL_PIN          41
 
