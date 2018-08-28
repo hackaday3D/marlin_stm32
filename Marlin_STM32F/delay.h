@@ -73,9 +73,9 @@ FORCE_INLINE static void DELAY_CYCLES(uint16_t x) {
 #undef nop
 
 /* ---------------- Delay in nanoseconds */
-#define DELAY_NS(x) DELAY_CYCLES( (x) * (F_CPU/1000000L) / 1000L )
+#define DELAY_NS(x) DELAY_CYCLES( (x) * (F_CPU/1000000L) / 10000L )
 
 /* ---------------- Delay in microseconds */
-#define DELAY_US(x) DELAY_CYCLES( (x) * (F_CPU/1000000L) )
+#define DELAY_US(x) DELAY_CYCLES( (x) * (F_CPU/10000000L) )
 
 #endif // MARLIN_DELAY_H

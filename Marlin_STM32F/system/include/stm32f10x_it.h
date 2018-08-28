@@ -21,14 +21,14 @@ uint16_t Get_Pin(unsigned char Pin);
 void  GPIO_Set_INPUT(unsigned char Pin);
 void  GPIO_Set_OUTPUT(unsigned char Pin);
 void ANALOG_SELECT_GPIO(unsigned char Pin);
-void WRITE_IO(unsigned char IO,unsigned char v);
-bool READ_IO(unsigned char IO);
+  void WRITE_IO(unsigned char IO,unsigned char v);
+  bool READ_IO(unsigned char IO);
 void SPIn_Init(char SPI_num,char SCK_pin,char MISO_pin,char MOSI_pin,char CS_pin,char remap);
 u8 SPIn_ReadWriteByte(u8 TxData);
 u8 SD_RecvData(u8*buf,u16 len);
 u8 SD_SendBlock(u8*buf,u8 cmd);
 
-void SPIn_SetSpeed(u16 SPI_BaudRatePrescaler);
+void SPIn_SetSpeed(uint16_t SPI_BaudRatePrescaler);
 char pinMode(int pin_number, unsigned char pin_status);
 void system_init_stm32(void);
 

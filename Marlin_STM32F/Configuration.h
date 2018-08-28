@@ -80,7 +80,7 @@
 #define STRING_SPLASH_LINE2 WEBSITE_URL         // will be shown during bootup in line 2
 
 #define STM32_LJ  1
-  
+ 
 
 /**
  * *** VENDORS PLEASE READ ***

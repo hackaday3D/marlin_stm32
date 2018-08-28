@@ -311,15 +311,30 @@ FORCE_INLINE void serialprintPGM(const char* str) {
 //	while (char ch = pgm_read_byte((char *)str++)) 
     customizedSerial.write(str);
 }
-  
+//robert
+void _delay_ms(int ms)
+{
+
+   unsigned int start = millis();
+   do
+   {
+		
+   }
+   while (millis() - start < ms);
+
+}
+
 void delay(int ms)  
 {
-   u16 i=0;
+
+	 _delay_ms(ms);
+  /* u16 i=0;
    while(ms--)
    {
-	  i=200;  //
+	  i=20;  //
 	  while(i--) ;
    }
+   */
 }
 //robert
 int analogInputToDigitalPin(int p)
@@ -425,12 +440,7 @@ int analogInputToDigitalPin(int p)
 #endif
 
 bool Running = true;
-//robert
-void _delay_ms(int k)
-{
 
-
-}
 
 uint8_t marlin_debug_flags = DEBUG_NONE;
 
@@ -14494,9 +14504,9 @@ void stop() {
  *    • status LEDs
  */
 void setup() {
-
-  system_init_stm32();
    
+  system_init_stm32();
+
   #if ENABLED(MAX7219_DEBUG)
     Max7219_init();
   #endif
@@ -14669,7 +14679,7 @@ void setup() {
   lcd_reset_status();
 
   #if ENABLED(SHOW_BOOTSCREEN)
-   //robert lcd_bootscreen();
+     lcd_bootscreen();
   #endif
 
   #if ENABLED(MIXING_EXTRUDER) && MIXING_VIRTUAL_TOOLS > 1
@@ -14746,8 +14756,8 @@ void setup() {
 int
 main(int argc, char* argv[])
  {
-
    	setup() ;
+
 	while(1)
 	{
 
