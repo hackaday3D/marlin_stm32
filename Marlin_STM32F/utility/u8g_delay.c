@@ -124,7 +124,7 @@ void u8g_10MicroDelay(void)
 
 /*== AVR Delay ==*/
 
-#if 1 //luojin
+#if 1 //robert
 
 
 void u8g_Delay(uint16_t val)
@@ -132,7 +132,7 @@ void u8g_Delay(uint16_t val)
    uint16_t i=0;
    while(val--)
    {
-	  i=800;  //
+	  i=180;  //
 	  while(i--) ;
    }
 }
