@@ -1356,9 +1356,10 @@ void Temperature::init() {
     }
 
   #ifdef HEATER_0_MINTEMP
- //robert   TEMP_MIN_ROUTINE(0);
+ //robert  TEMP_MIN_ROUTINE(0);
   #endif
   #ifdef HEATER_0_MAXTEMP
+
     TEMP_MAX_ROUTINE(0);
   #endif
   #if HOTENDS > 1
@@ -1396,7 +1397,7 @@ void Temperature::init() {
 
   #if HAS_HEATED_BED
     #ifdef BED_MINTEMP
-   /*robert   while (analog2tempBed(bed_minttemp_raw) < BED_MINTEMP) {
+  /*robert      while (analog2tempBed(bed_minttemp_raw) < BED_MINTEMP) {
         #if HEATER_BED_RAW_LO_TEMP < HEATER_BED_RAW_HI_TEMP
           bed_minttemp_raw += OVERSAMPLENR;
         #else
@@ -1405,7 +1406,7 @@ void Temperature::init() {
       }*/
     #endif // BED_MINTEMP
     #ifdef BED_MAXTEMP
-      while (analog2tempBed(bed_maxttemp_raw) > BED_MAXTEMP) {
+    while (analog2tempBed(bed_maxttemp_raw) > BED_MAXTEMP) {
         #if HEATER_BED_RAW_LO_TEMP < HEATER_BED_RAW_HI_TEMP
           bed_maxttemp_raw -= OVERSAMPLENR;
         #else

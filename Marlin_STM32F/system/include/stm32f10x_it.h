@@ -32,7 +32,7 @@ void SPIn_SetSpeed(uint16_t SPI_BaudRatePrescaler);
 char pinMode(int pin_number, unsigned char pin_status);
 void system_init_stm32(void);
 
-unsigned int millis(void);
+unsigned long millis(void);
 void millis_count_init(void);
 void motor_next_isr(u16 time_n);
 char Serial_send(unsigned char buf_data);
