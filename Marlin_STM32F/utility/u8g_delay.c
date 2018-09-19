@@ -132,8 +132,8 @@ void u8g_Delay(uint16_t val)
    uint16_t i=0;
    while(val--)
    {
-	  i=180;  //
-	  while(i--) ;
+	  i=280;  // 
+	  while(i--) ; 
    }
 }
 
@@ -147,7 +147,7 @@ void u8g_MicroDelay(void)
 /* delay by 10 micro seconds */
 void u8g_10MicroDelay(void)
 {
-	u8g_Delay(10);
+	u8g_Delay(5);
 
 }
 

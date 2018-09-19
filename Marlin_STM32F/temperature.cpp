@@ -65,7 +65,7 @@
 	
 	 static  u16 temperature_count;
 	
-	 static float gt[5]={64.0};  //ÎÂ¶È·µ»ØÊý×é
+	 static float gt[5]={64.0};   
 
 Temperature thermalManager;
 
@@ -675,9 +675,11 @@ float Temperature::get_pid_output(const int8_t e) {
           pid_output = 0;
         }
       }
+	  
     #else
       pid_output = constrain(target_temperature[HOTEND_INDEX], 0, PID_MAX);
     #endif // PID_OPENLOOP
+	 
 
     #if ENABLED(PID_DEBUG)
       SERIAL_ECHO_START();
@@ -938,9 +940,10 @@ float Temperature::Get_Temperature(u8 hot_heat_num)
     u16 i = 1;
     u8 j=0,k=0;
     u16 temp=0;
+
   for(j=1;j<=31;j++) 
     { 
-        for (k=0;k<32-j;k++) 
+        for (k=0;k<32-j;k++)
         {
             if (temperature_buffer[hot_heat_num][k]>temperature_buffer[hot_heat_num][k+1]) 
             { 
@@ -1175,7 +1178,7 @@ void Temperature::updateTemperaturesFromRawValues() {
  * The manager is implemented by periodic calls to manage_heater()
  */
 void Temperature::init() {
-   tmper_init_stm32();//luojoin
+   tmper_init_stm32();//robert
   #if MB(RUMBA) && ( \
        ENABLED(HEATER_0_USES_AD595)  || ENABLED(HEATER_1_USES_AD595)  || ENABLED(HEATER_2_USES_AD595)  || ENABLED(HEATER_3_USES_AD595)  || ENABLED(HEATER_4_USES_AD595)  || ENABLED(HEATER_BED_USES_AD595)  || ENABLED(HEATER_CHAMBER_USES_AD595) \
     || ENABLED(HEATER_0_USES_AD8495) || ENABLED(HEATER_1_USES_AD8495) || ENABLED(HEATER_2_USES_AD8495) || ENABLED(HEATER_3_USES_AD8495) || ENABLED(HEATER_4_USES_AD8495) || ENABLED(HEATER_BED_USES_AD8495) || ENABLED(HEATER_CHAMBER_USES_AD8495))

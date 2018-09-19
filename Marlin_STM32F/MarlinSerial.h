@@ -86,11 +86,11 @@ void store_rxd_char(char rec_c);
 // Use only 0 or powers of 2 greater than 1
 // : [0, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, ...]
 #ifndef RX_BUFFER_SIZE
-  #define RX_BUFFER_SIZE 128
+  #define RX_BUFFER_SIZE 128 
 #endif
 // 256 is the max TX buffer limit due to uint8_t head and tail.
 #ifndef TX_BUFFER_SIZE
-  #define TX_BUFFER_SIZE 32
+  #define TX_BUFFER_SIZE  32
 #endif
 
 #if USE_MARLINSERIAL
@@ -98,6 +98,7 @@ void store_rxd_char(char rec_c);
   #if RX_BUFFER_SIZE > 256
     typedef uint16_t ring_buffer_pos_t;
   #else
+  
     typedef uint8_t ring_buffer_pos_t;
   #endif
 

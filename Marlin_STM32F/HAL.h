@@ -52,7 +52,7 @@
   #define CRITICAL_SECTION_END    SREG = _sreg
 #endif
 
-#define ISRS_ENABLED() TEST(SREG, SREG_I)
+#define ISRS_ENABLED() 0 //robertTEST(SREG, SREG_I)
 #define ENABLE_ISRS()  //robertsei()
 #define DISABLE_ISRS() //robert cli()
 

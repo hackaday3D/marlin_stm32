@@ -427,12 +427,10 @@
   }
 
   int MarlinSerial::peek(void) {
-#if STM32_LJ 
-	return 0;
-#else
+
     const ring_buffer_pos_t h = atomic_read_rx_head(), t = rx_buffer.tail;
     return h == t ? -1 : rx_buffer.buffer[t];
-#endif
+
   }
 
   int MarlinSerial::read(void) {
@@ -487,8 +485,7 @@
     //  - Read the RX head index in a safe way. (See atomic_read_rx_head.)
     //  - Set the tail, making sure the RX ISR will always get a stable value, even
     //    if it interrupts the writing of the value of that variable in the middle.
-    atomic_set_rx_tail(atomic_read_rx_head());
-
+    atomic_set_rx_tail(atomic_read_rx_head()); 
     #if ENABLED(SERIAL_XON_XOFF)
       // If the XOFF char was sent, or about to be sent...
       if ((xon_xoff_state & XON_XOFF_CHAR_MASK) == XOFF_CHAR) {

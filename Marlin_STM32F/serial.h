@@ -48,7 +48,7 @@ extern const char errormagic[] PROGMEM;
 #define SERIAL_PRINTLN(x,b)    MYSERIAL0.println(x,b)
 #define SERIAL_PRINTF(args...) MYSERIAL0.printf(args)
 
-#define SERIAL_FLUSH()         MYSERIAL0.flush()
+#define SERIAL_FLUSH()        MYSERIAL0.flush()
 #if TX_BUFFER_SIZE > 0
   #define SERIAL_FLUSHTX()     MYSERIAL0.flushTX()
 #endif

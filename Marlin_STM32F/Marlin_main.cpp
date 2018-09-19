@@ -324,7 +324,7 @@ void _delay_ms(int ms)
 
 }
 
-void delay(int ms)  
+void delay(int ms)
 {
 
 	 _delay_ms(ms);
@@ -10992,41 +10992,48 @@ inline void gcode_M502() {
    *               rows or columns depending upon rotation)
    */
   inline void gcode_M7219() {
-    if (parser.seen('I'))
-      Max7219_Clear();
+    if (parser.seen('I')) {
+      max7219.register_setup();
+      max7219.clear();
+    }
 
-    if (parser.seen('F'))
-      for(uint8_t x = 0; x < MAX7219_X_LEDS; x++)
-        Max7219_Set_Column(x, 0xffffffff);
+    if (parser.seen('F')) max7219.fill();
+
+    const uint32_t v = parser.ulongval('V');
 
     if (parser.seenval('R')) {
-      const uint32_t r = parser.value_int();
-      Max7219_Set_Row(r, parser.ulongval('V'));
-      return;
+      const uint8_t r = parser.value_byte();
+      max7219.set_row(r, v);
     }
     else if (parser.seenval('C')) {
-      const uint32_t c = parser.value_int();
-      Max7219_Set_Column(c, parser.ulongval('V'));
-      return;
+      const uint8_t c = parser.value_byte();
+      max7219.set_column(c, v);
     }
-
-    if (parser.seenval('X') || parser.seenval('Y')) {
+    else if (parser.seenval('X') || parser.seenval('Y')) {
       const uint8_t x = parser.byteval('X'), y = parser.byteval('Y');
       if (parser.seenval('V'))
-        Max7219_LED_Set(x, y, parser.boolval('V'));
+        max7219.led_set(x, y, parser.boolval('V'));
       else
-        Max7219_LED_Toggle(x, y);
+        max7219.led_toggle(x, y);
+    }
+    else if (parser.seen('D')) {
+      const uint8_t line = parser.byteval('D') + (parser.byteval('U') << 3);
+      if (line < MAX7219_LINES) {
+        max7219.led_line[line] = v;
+        return max7219.refresh_line(line);
+      }
     }
 
     if (parser.seen('P')) {
-      for(uint8_t x = 0; x < (8*MAX7219_NUMBER_UNITS); x++) {
-        SERIAL_ECHOPAIR("LEDs[", x);
-        SERIAL_ECHOPAIR("]=", LEDs[x]);
-        SERIAL_ECHO("\n");
+      for (uint8_t r = 0; r < MAX7219_LINES; r++) {
+        SERIAL_ECHOPGM("led_line[");
+        if (r < 10) SERIAL_CHAR(' ');
+        SERIAL_ECHO(int(r));
+        SERIAL_ECHO("]=");
+        for (uint8_t b = 8; b--;) SERIAL_CHAR('0' + TEST(max7219.led_line[r], b));
+        SERIAL_EOL();
       }
-      return;
     }
-
   }
 #endif // MAX7219_GCODE
 
@@ -12074,6 +12081,12 @@ inline void invalid_extruder_error(const uint8_t e) {
 void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool no_move/*=false*/) {
   planner.synchronize();
 
+  #if HAS_LEVELING
+    // Set current position to the physical position
+    const bool leveling_was_active = planner.leveling_active;
+    set_bed_leveling_enabled(false);
+  #endif
+
   #if ENABLED(MIXING_EXTRUDER) && MIXING_VIRTUAL_TOOLS > 1
 
     mixing_tool_change(tmp_extruder);
@@ -12097,21 +12110,25 @@ void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool n
           #endif
         }
 
-        // Save current position to destination, for use later
-        set_destination_from_current();
-
-        #if HAS_LEVELING
-          // Set current position to the physical position
-          const bool leveling_was_active = planner.leveling_active;
-          set_bed_leveling_enabled(false);
-        #endif
-
         #if ENABLED(DUAL_X_CARRIAGE)
 
+          #if HAS_SOFTWARE_ENDSTOPS
+            // Update the X software endstops early
+            active_extruder = tmp_extruder;
+            update_software_endstops(X_AXIS);
+            active_extruder = !tmp_extruder;
+          #endif
+
+          // Don't move the new extruder out of bounds
+          if (!WITHIN(current_position[X_AXIS], soft_endstop_min[X_AXIS], soft_endstop_max[X_AXIS]))
+            no_move = true;
+
+          if (!no_move) set_destination_from_current();
           dualx_tool_change(tmp_extruder, no_move); // Can modify no_move
 
         #else // !DUAL_X_CARRIAGE
 
+          set_destination_from_current();
           #if ENABLED(PARKING_EXTRUDER) // Dual Parking extruder
             parking_extruder_tool_change(tmp_extruder, no_move);
           #endif
@@ -12147,11 +12164,6 @@ void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool n
         #if ENABLED(SWITCHING_NOZZLE)
           // The newly-selected extruder Z is actually at...
           current_position[Z_AXIS] -= zdiff;
-        #endif
-
-        #if HAS_LEVELING
-          // Restore leveling to re-establish the logical position
-          set_bed_leveling_enabled(leveling_was_active);
         #endif
 
         // Tell the planner the new "current position"
@@ -12197,6 +12209,10 @@ void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool n
 
       feedrate_mm_s = old_feedrate_mm_s;
 
+      #if HAS_SOFTWARE_ENDSTOPS && ENABLED(DUAL_X_CARRIAGE)
+        update_software_endstops(X_AXIS);
+      #endif
+
     #else // HOTENDS <= 1
 
       UNUSED(fr_mm_s);
@@ -12221,6 +12237,11 @@ void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool n
 
     #if HAS_FANMUX
       fanmux_switch(active_extruder);
+    #endif
+
+    #if HAS_LEVELING
+      // Restore leveling to re-establish the logical position
+      set_bed_leveling_enabled(leveling_was_active);
     #endif
 
     SERIAL_ECHO_START();
@@ -12436,6 +12457,8 @@ void process_parsed_command() {
         case 108: gcode_M108(); break;                            // M108: Cancel Waiting
         case 112: gcode_M112(); break;                            // M112: Emergency Stop
         case 410: gcode_M410(); break;                            // M410: Quickstop. Abort all planned moves
+      #else
+        case 108: case 112: case 410: break;                      // Silently drop as handled by emergency parser
       #endif
 
       #if ENABLED(HOST_KEEPALIVE_FEATURE)
@@ -12764,6 +12787,7 @@ void flush_and_request_resend() {
   SERIAL_PROTOCOLPGM(MSG_RESEND);
   SERIAL_PROTOCOLLN(gcode_LastN + 1);
   ok_to_send();
+  
 }
 
 /**
@@ -13983,22 +14007,28 @@ void prepare_move_to_destination() {
         #if HAS_HEATED_BED
           || thermalManager.soft_pwm_amount_bed > 0
         #endif
-          || E0_ENABLE_READ == E_ENABLE_ON // If any of the drivers are enabled...
+          #if HAS_X2_ENABLE
+            || X2_ENABLE_READ == X_ENABLE_ON
+          #endif
+          #if HAS_Y2_ENABLE
+            || Y2_ENABLE_READ == Y_ENABLE_ON
+          #endif
+          #if HAS_Z2_ENABLE
+            || Z2_ENABLE_READ == Z_ENABLE_ON
+          #endif
+          || E0_ENABLE_READ == E_ENABLE_ON
           #if E_STEPPERS > 1
             || E1_ENABLE_READ == E_ENABLE_ON
-            #if HAS_X2_ENABLE
-              || X2_ENABLE_READ == X_ENABLE_ON
-            #endif
             #if E_STEPPERS > 2
-              || E2_ENABLE_READ == E_ENABLE_ON
+                || E2_ENABLE_READ == E_ENABLE_ON
               #if E_STEPPERS > 3
-                || E3_ENABLE_READ == E_ENABLE_ON
+                  || E3_ENABLE_READ == E_ENABLE_ON
                 #if E_STEPPERS > 4
-                  || E4_ENABLE_READ == E_ENABLE_ON
-                #endif // E_STEPPERS > 4
-              #endif // E_STEPPERS > 3
-            #endif // E_STEPPERS > 2
-          #endif // E_STEPPERS > 1
+                    || E4_ENABLE_READ == E_ENABLE_ON
+                #endif
+              #endif
+            #endif
+          #endif
       ) {
         lastMotorOn = ms; //... set time to NOW so the fan will turn on
       }
@@ -14381,7 +14411,7 @@ void idle(
   #endif
 ) {
   #if ENABLED(MAX7219_DEBUG)
-    Max7219_idle_tasks();
+    max7219.idle_tasks();
   #endif
 
   lcd_update();
@@ -14508,7 +14538,7 @@ void setup() {
   system_init_stm32();
 
   #if ENABLED(MAX7219_DEBUG)
-    Max7219_init();
+    max7219.init();
   #endif
 
   #if ENABLED(DISABLE_JTAG)

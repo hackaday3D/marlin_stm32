@@ -36,6 +36,7 @@ unsigned long millis(void);
 void millis_count_init(void);
 void motor_next_isr(u16 time_n);
 char Serial_send(unsigned char buf_data);
+void FLUSH_serial0(void);
 
 }
 #endif
