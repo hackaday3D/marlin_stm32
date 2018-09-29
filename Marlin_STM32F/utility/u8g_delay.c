@@ -132,7 +132,7 @@ void u8g_Delay(uint16_t val)
    uint16_t i=0;
    while(val--)
    {
-	  i=280;  // 
+	  i=320;  // 
 	  while(i--) ; 
    }
 }

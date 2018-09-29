@@ -315,7 +315,15 @@ void Planner::init() {
    *  return uint32_t(x);                                             // x holds the proper estimation
    *
    */
-  static uint32_t get_period_inverse(uint32_t d) {
+    // All other 32-bit MPUs can easily do inverse using hardware division,
+    // so we don't need to reduce precision or to use assembly language at all.
+    // This routine, for all other archs, returns 0x100000000 / d ~= 0xFFFFFFFF / d
+    static FORCE_INLINE uint32_t get_period_inverse(const uint32_t d) {
+      return d ? 0xFFFFFFFF / d : 0xFFFFFFFF;
+    }
+
+   
+  static uint32_t get_period_inverse0(uint32_t d) {
 
     static const uint8_t inv_tab[256] PROGMEM = {
       255,253,252,250,248,246,244,242,240,238,236,234,233,231,229,227,
@@ -348,6 +356,33 @@ void Planner::init() {
       209715,207126,204600,202135,199728,197379,195083,192841,190650,188508,186413,184365,182361,180400,178481,176602,
       174762,172960,171196,169466,167772,166111,164482,162885,161319,159783,158275,156796,155344,153919,152520
     };
+#if STM32_LJ
+	  // For small divisors, it is best to directly retrieve the results
+		// if (d <= 110) return pgm_read_dword(&small_inv_tab[d]);
+	   
+		 // Compute initial estimation of 0x1000000/x -
+		 // Get most significant bit set on divider
+		 uint8_t idx = 0;
+		 uint32_t nr = d;
+		 if (!(nr & 0xFF0000)) {
+		   nr <<= 8; idx += 8;
+		   if (!(nr & 0xFF0000)) { nr <<= 8; idx += 8; }
+		 }
+		 if (!(nr & 0xF00000)) { nr <<= 4; idx += 4; }
+		 if (!(nr & 0xC00000)) { nr <<= 2; idx += 2; }
+		 if (!(nr & 0x800000)) { nr <<= 1; idx += 1; }
+	   
+		 // Isolate top 9 bits of the denominator, to be used as index into the initial estimation table
+		 uint32_t tidx = nr >> 15,										 // top 9 bits. bit8 is always set
+				  ie = inv_tab[tidx & 0xFF] + 256,						 // Get the table value. bit9 is always set
+				  x = idx <= 8 ? (ie >> (8 - idx)) : (ie << (idx - 8));  // Position the estimation at the proper place
+	   
+		 x = uint32_t((x * uint64_t(_BV(25) - x * d)) >> 24);			 // Refine estimation by newton-raphson. 1 iteration is enough
+		 const uint32_t r = _BV(24) - x * d;							 // Estimate remainder
+		 if (r >= d) x++;												 // Check whether to adjust result
+		 return uint32_t(x);											 // x holds the proper estimation
+	   
+#else
 
     // For small divisors, it is best to directly retrieve the results
     if (d <= 110) return pgm_read_dword(&small_inv_tab[d]);
@@ -357,6 +392,8 @@ void Planner::init() {
                      r10 = (d >> 16) & 0xFF,
                      r2,r3,r4,r5,r6,r7,r11,r12,r13,r14,r15,r16,r17,r18;
     register const uint8_t* ptab = inv_tab;
+
+
 
     __asm__ __volatile__(
       // %8:%7:%6 = interval
@@ -674,9 +711,9 @@ void Planner::init() {
       :
       : "r0", "r1", "cc"
     );
-
     // Return the result
     return r11 | (uint16_t(r12) << 8) | (uint32_t(r13) << 16);
+#endif
   }
 
 #endif // S_CURVE_ACCELERATION

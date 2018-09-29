@@ -153,12 +153,23 @@ uint32_t Stepper::advance_dividend[XYZE] = { 0 },
 #endif
 
 #if ENABLED(S_CURVE_ACCELERATION)
+#if 0// STM32_LJ
+  int32_t    Stepper::bezier_A  ;    // A coefficient in Bézier speed curve with alias for assembler
+  int32_t    Stepper::bezier_B  ;    // B coefficient in Bézier speed curve with alias for assembler
+  int32_t    Stepper::bezier_C  ;    // C coefficient in Bézier speed curve with alias for assembler
+  uint32_t   Stepper::bezier_F  ;   // F coefficient in Bézier speed curve with alias for assembler
+  uint32_t   Stepper:: bezier_AV  ; // AV coefficient in Bézier speed curve with alias for assembler
+  bool  Stepper:: A_negative  ;   // If A coefficient was negative
+
+#else
   int32_t __attribute__((used)) Stepper::bezier_A __asm__("bezier_A");    // A coefficient in Bézier speed curve with alias for assembler
   int32_t __attribute__((used)) Stepper::bezier_B __asm__("bezier_B");    // B coefficient in Bézier speed curve with alias for assembler
   int32_t __attribute__((used)) Stepper::bezier_C __asm__("bezier_C");    // C coefficient in Bézier speed curve with alias for assembler
   uint32_t __attribute__((used)) Stepper::bezier_F __asm__("bezier_F");   // F coefficient in Bézier speed curve with alias for assembler
   uint32_t __attribute__((used)) Stepper::bezier_AV __asm__("bezier_AV"); // AV coefficient in Bézier speed curve with alias for assembler
   bool __attribute__((used)) Stepper::A_negative __asm__("A_negative");   // If A coefficient was negative
+#endif
+  
   bool Stepper::bezier_2nd_half;    // =false If Bézier curve has been initialized or not
 #endif
 
@@ -635,7 +646,20 @@ void Stepper::set_directions() {
    *    These functions are translated to assembler for optimal performance.
    *    Coefficient calculation takes 70 cycles. Bezier point evaluation takes 150 cycles.
    */
+#if STM32_LJ
+ 
+// For all the other 32bit CPUs
+   FORCE_INLINE void Stepper::_calc_bezier_curve_coeffs(  int32_t v0,   int32_t v1,   uint32_t av) {
+	 // Calculate the Bézier coefficients
+	 
+	 bezier_A =  768 * (v1 - v0);//768
+	 bezier_B = 1920 * (v0 - v1);//1920
+	 bezier_C = 1280 * (v1 - v0);//1280
+	 bezier_F =  128 * v0;//128
+	 bezier_AV = av;
+   }
 
+#else
   // For AVR we use assembly to maximize speed
   void Stepper::_calc_bezier_curve_coeffs(const int32_t v0, const int32_t v1, const uint32_t av) {
 
@@ -738,6 +762,73 @@ void Stepper::set_directions() {
       : "r0", "r1", "cc", "memory"
     );
   }
+#endif
+
+#if STM32_LJ
+
+
+  	      FORCE_INLINE int32_t Stepper::_eval_bezier_curve(const uint32_t curr_step) {
+
+
+        // For ARM Cortex M3/M4 CPUs, we have the optimized assembler version, that takes 43 cycles to execute
+        register uint32_t flo = 0;
+        register uint32_t fhi = bezier_AV * curr_step;
+        register uint32_t t = fhi;
+        register int32_t alo = bezier_F;
+        register int32_t ahi = 0;
+        register int32_t A = bezier_A;
+        register int32_t B = bezier_B;
+        register int32_t C = bezier_C;
+
+         __asm__ __volatile__(
+          ".syntax unified" "\n\t"              // is to prevent CM0,CM1 non-unified syntax
+          A("lsrs  %[ahi],%[alo],#1")           // a  = F << 31      1 cycles
+          A("lsls  %[alo],%[alo],#31")          //                   1 cycles
+          A("umull %[flo],%[fhi],%[fhi],%[t]")  // f *= t            5 cycles [fhi:flo=64bits]
+          A("umull %[flo],%[fhi],%[fhi],%[t]")  // f>>=32; f*=t      5 cycles [fhi:flo=64bits]
+          A("lsrs  %[flo],%[fhi],#1")           //                   1 cycles [31bits]
+          A("smlal %[alo],%[ahi],%[flo],%[C]")  // a+=(f>>33)*C;     5 cycles
+          A("umull %[flo],%[fhi],%[fhi],%[t]")  // f>>=32; f*=t      5 cycles [fhi:flo=64bits]
+          A("lsrs  %[flo],%[fhi],#1")           //                   1 cycles [31bits]
+          A("smlal %[alo],%[ahi],%[flo],%[B]")  // a+=(f>>33)*B;     5 cycles
+          A("umull %[flo],%[fhi],%[fhi],%[t]")  // f>>=32; f*=t      5 cycles [fhi:flo=64bits]
+          A("lsrs  %[flo],%[fhi],#1")           // f>>=33;           1 cycles [31bits]
+          A("smlal %[alo],%[ahi],%[flo],%[A]")  // a+=(f>>33)*A;     5 cycles
+          A("lsrs  %[alo],%[ahi],#6")           // a>>=38            1 cycles
+          : [alo]"+r"( alo ) ,
+            [flo]"+r"( flo ) ,
+            [fhi]"+r"( fhi ) ,
+            [ahi]"+r"( ahi ) ,
+            [A]"+r"( A ) ,  // <== Note: Even if A, B, C, and t registers are INPUT ONLY
+            [B]"+r"( B ) ,  //  GCC does bad optimizations on the code if we list them as
+            [C]"+r"( C ) ,  //  such, breaking this function. So, to avoid that problem,
+            [t]"+r"( t )    //  we list all registers as input-outputs.
+          :
+          : "cc"
+        );
+        return alo;
+  /*      
+        uint32_t t = bezier_AV * curr_step;               // t: Range 0 - 1^32 = 32 bits
+        uint64_t f = t;
+        f *= t;                                           // Range 32*2 = 64 bits (unsigned)
+        f >>= 32;                                         // Range 32 bits  (unsigned)
+        f *= t;                                           // Range 32*2 = 64 bits  (unsigned)
+        f >>= 32;                                         // Range 32 bits : f = t^3  (unsigned)
+        int64_t acc = (int64_t) bezier_F << 31;           // Range 63 bits (signed)
+        acc += ((uint32_t) f >> 1) * (int64_t) bezier_C;  // Range 29bits + 31 = 60bits (plus sign)
+        f *= t;                                           // Range 32*2 = 64 bits
+        f >>= 32;                                         // Range 32 bits : f = t^3  (unsigned)
+        acc += ((uint32_t) f >> 1) * (int64_t) bezier_B;  // Range 29bits + 31 = 60bits (plus sign)
+        f *= t;                                           // Range 32*2 = 64 bits
+        f >>= 32;                                         // Range 32 bits : f = t^3  (unsigned)
+        acc += ((uint32_t) f >> 1) * (int64_t) bezier_A;  // Range 28bits + 31 = 59bits (plus sign)
+        acc >>= (31 + 7);                                 // Range 24bits (plus sign)
+        return (int32_t) acc;
+   */      
+		}
+ 
+
+  #else
 
   FORCE_INLINE int32_t Stepper::_eval_bezier_curve(const uint32_t curr_step) {
 
@@ -1123,7 +1214,7 @@ void Stepper::set_directions() {
     );
     return (r2 | (uint16_t(r3) << 8)) | (uint32_t(r4) << 16);
   }
-
+#endif
 #endif // S_CURVE_ACCELERATION
 
 /**
