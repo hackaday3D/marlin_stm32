@@ -1944,7 +1944,7 @@ uint32_t Stepper::stepper_block_phase_isr() {
 
 FORCE_INLINE bool all_axes_homed() { return (axis_homed & xyz_bits) == xyz_bits; }
 FORCE_INLINE bool all_axes_known() { return (axis_known_position & xyz_bits) == xyz_bits; }
-FORCE_INLINE bool position_is_reachable_by_probe(const float &rx, const float &ry) { return position_is_reachable(rx, ry); }
+//FORCE_INLINE bool position_is_reachable_by_probe(const float &rx, const float &ry) { return position_is_reachable(rx, ry); }
 
 FORCE_INLINE void HAL_timer_start(const uint8_t timer_num, const uint32_t frequency) {
   UNUSED(frequency);

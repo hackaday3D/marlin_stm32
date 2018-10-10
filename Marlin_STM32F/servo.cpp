@@ -40,7 +40,7 @@
  * attach(pin, min, max) - Attach to a pin, setting min and max values in microseconds
  *                         Default min is 544, max is 2400
  *
- * write()               - Set the servo angle in degrees. (Invalid angles —over MIN_PULSE_WIDTH— are treated as µs.)
+ * write()               - Set the servo angle in degrees. (Invalid angles 鈥攐ver MIN_PULSE_WIDTH鈥� are treated as 碌s.)
  * writeMicroseconds()   - Set the servo pulse width in microseconds.
  * move(pin, angle)      - Sequence of attach(pin), write(angle), delay(SERVO_DELAY).
  *                         With DEACTIVATE_SERVOS_AFTER_MOVE it detaches after SERVO_DELAY.
@@ -51,15 +51,16 @@
  *
  */
 #include "MarlinConfig.h"
+#include "Marlin.h"
 
 #if HAS_SERVOS
 
-#include <avr/interrupt.h>
+//#include <avr/interrupt.h>
 #include <Arduino.h>
 
 #include "servo.h"
 #include "utility.h"
-
+#define clockCyclesPerMicrosecond()  8889
 #define usToTicks(_us)    (( clockCyclesPerMicrosecond()* _us) / 8)     // converts microseconds to tick (assumes prescale of 8)  // 12 Aug 2009
 #define ticksToUs(_ticks) (( (unsigned)_ticks * 8)/ clockCyclesPerMicrosecond() ) // converts from ticks back to microseconds
 
@@ -108,6 +109,9 @@ static inline void handle_interrupts(timer16_Sequence_t timer, volatile uint16_t
   }
 }
 
+#if STM32_LJ
+
+#else
 #ifndef WIRING // Wiring pre-defines signal handlers so don't define any if compiling for the Wiring platform
 
   // Interrupt handlers for Arduino
@@ -139,8 +143,15 @@ static inline void handle_interrupts(timer16_Sequence_t timer, volatile uint16_t
 
 #endif // WIRING
 
+#endif
+
+
 
 static void initISR(timer16_Sequence_t timer) {
+#if STM32_LJ
+
+#else
+
   #if ENABLED(_useTimer1)
     if (timer == _timer1) {
       TCCR1A = 0;             // normal counting mode
@@ -197,6 +208,7 @@ static void initISR(timer16_Sequence_t timer) {
       TIMSK5 = _BV(OCIE5A);   // enable the output compare interrupt
     }
   #endif
+#endif
 }
 
 static void finISR(timer16_Sequence_t timer) {
@@ -278,10 +290,17 @@ void Servo::detach() {
 }
 
 void Servo::write(int value) {
-  if (value < MIN_PULSE_WIDTH) { // treat values less than 544 as angles in degrees (valid values in microseconds are handled as microseconds)
-    value = map(constrain(value, 0, 180), 0, 180, SERVO_MIN(), SERVO_MAX());
-  }
-  this->writeMicroseconds(value);
+#if STM32_LJ	
+	if (value < MIN_PULSE_WIDTH) { // treat values less than 544 as angles in degrees (valid values in microseconds are handled as microseconds)
+	  value = map(constrain(value, 0, 180), 0, 180, 500, 2500);
+	  TIM_SetCompare2(TIM1, value); //
+	}
+#else	 
+	if (value < MIN_PULSE_WIDTH) { // treat values less than 544 as angles in degrees (valid values in microseconds are handled as microseconds)
+	  value = map(constrain(value, 0, 180), 0, 180, SERVO_MIN(), SERVO_MAX());
+	}
+	this->writeMicroseconds(value);
+#endif  
 }
 
 void Servo::writeMicroseconds(int value) {

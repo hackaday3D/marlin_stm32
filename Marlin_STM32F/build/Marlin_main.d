@@ -42,8 +42,9 @@ Marlin_main.o: ../Marlin_main.cpp ../Marlin.h ../MarlinConfig.h \
  ../thermistortables.h ../thermistortable_1.h ../cardreader.h ../SdFile.h \
  ../SdBaseFile.h ../SdFatConfig.h ../SdVolume.h ../Sd2Card.h ../SdInfo.h \
  ../SdFatStructs.h ../configuration_store.h ../nozzle.h ../point_t.h \
- ../printcounter.h ../stopwatch.h ../duration_t.h ../parser.h ../buzzer.h \
- ../circularqueue.h ../watchdog.h ../SdFatUtil.h
+ ../printcounter.h ../stopwatch.h ../duration_t.h ../parser.h \
+ ../planner_bezier.h ../buzzer.h ../circularqueue.h ../watchdog.h \
+ ../servo.h ../SdFatUtil.h
 
 ../Marlin.h:
 
@@ -207,10 +208,14 @@ Marlin_main.o: ../Marlin_main.cpp ../Marlin.h ../MarlinConfig.h \
 
 ../parser.h:
 
+../planner_bezier.h:
+
 ../buzzer.h:
 
 ../circularqueue.h:
 
 ../watchdog.h:
+
+../servo.h:
 
 ../SdFatUtil.h:

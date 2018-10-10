@@ -5220,7 +5220,8 @@ void home_all_axes() { gcode_G28(true); }
               if (!position_is_reachable_by_probe(xProbe, yProbe)) continue;
             #endif
 
-            measured_z = faux ? 0.001 * random(-100, 101) : probe_pt(xProbe, yProbe, raise_after, verbose_level);
+         //robert   measured_z = faux ? 0.001 * random(-100, 101) : probe_pt(xProbe, yProbe, raise_after, verbose_level);
+            measured_z = faux ? 0.001 * (random()%100) : probe_pt(xProbe, yProbe, raise_after, verbose_level);
 
             if (isnan(measured_z)) {
               set_bed_leveling_enabled(abl_should_enable);
@@ -5257,7 +5258,8 @@ void home_all_axes() { gcode_G28(true); }
           // Retain the last probe position
           xProbe = points[i].x;
           yProbe = points[i].y;
-          measured_z = faux ? 0.001 * random(-100, 101) : probe_pt(xProbe, yProbe, raise_after, verbose_level);
+  //robert        measured_z = faux ? 0.001 * random(-100, 101) : probe_pt(xProbe, yProbe, raise_after, verbose_level);
+          measured_z = faux ? 0.001 * (random()%100) : probe_pt(xProbe, yProbe, raise_after, verbose_level);
           if (isnan(measured_z)) {
             set_bed_leveling_enabled(abl_should_enable);
             break;

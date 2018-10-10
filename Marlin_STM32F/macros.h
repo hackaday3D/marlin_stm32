@@ -294,6 +294,10 @@ extern int DDRJ,PINJ1,DDRD,PIND3,PIND,PIND7,PINF2,PINK,PORTK,PINK0,ADC,REFS0,ADM
       _a >= 0 ? _a : -_a;})
 
 #endif
+inline long map(long x, long in_min, long in_max, long out_min, long out_max)
+{
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
 
 #define MIN3(a, b, c)       MIN(MIN(a, b), c)
 #define MIN4(a, b, c, d)    MIN(MIN3(a, b, c), d)
