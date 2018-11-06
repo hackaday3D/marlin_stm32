@@ -317,7 +317,8 @@ void lcd_printPGM_utf(const char *str, uint8_t n=LCD_WIDTH) {
       #if ENABLED(START_BMPHIGH)
         (LCD_PIXEL_HEIGHT - (START_BMPHEIGHT)) / 2
       #else
-        DOG_CHAR_HEIGHT
+	    0
+        //DOG_CHAR_HEIGHT
       #endif
     ;
 
@@ -334,8 +335,8 @@ void lcd_printPGM_utf(const char *str, uint8_t n=LCD_WIDTH) {
       #else
         const uint8_t txt1X = (width - (sizeof(STRING_SPLASH_LINE1) - 1) * (DOG_CHAR_WIDTH)) / 2,
                       txt2X = (width - (sizeof(STRING_SPLASH_LINE2) - 1) * (DOG_CHAR_WIDTH)) / 2;
-        u8g.drawStr(txt1X, height - (DOG_CHAR_HEIGHT) * 3 / 2, STRING_SPLASH_LINE1);
-        u8g.drawStr(txt2X, height - (DOG_CHAR_HEIGHT) * 1 / 2, STRING_SPLASH_LINE2);
+        u8g.drawStr(90, height - (DOG_CHAR_HEIGHT) * 1 / 2, STRING_SPLASH_LINE1);
+        u8g.drawStr(txt2X, height - (DOG_CHAR_HEIGHT) * 3 / 2, STRING_SPLASH_LINE2);
       #endif
     } while (u8g.nextPage());
     safe_delay(BOOTSCREEN_TIMEOUT);

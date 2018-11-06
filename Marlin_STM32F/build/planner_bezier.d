@@ -37,7 +37,7 @@ planner_bezier.o: ../planner_bezier.cpp ../MarlinConfig.h ../boards.h \
  ../system/include/stm32f1-stdperiph/stm32f10x_wwdg.h \
  ../system/include/stm32f1-stdperiph/misc.h \
  ../system/include/stm32f1-stdperiph/stm32f10x_usart.h ../temperature.h \
- ../thermistortables.h ../thermistortable_1.h
+ ../thermistortables.h ../thermistortable_1.h ../thermistortable_13.h
 
 ../MarlinConfig.h:
 
@@ -160,3 +160,5 @@ planner_bezier.o: ../planner_bezier.cpp ../MarlinConfig.h ../boards.h \
 ../thermistortables.h:
 
 ../thermistortable_1.h:
+
+../thermistortable_13.h:

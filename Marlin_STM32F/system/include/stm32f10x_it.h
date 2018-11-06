@@ -23,7 +23,7 @@ void  GPIO_Set_OUTPUT(unsigned char Pin);
 void ANALOG_SELECT_GPIO(unsigned char Pin);
   void WRITE_IO(unsigned char IO,unsigned char v);
   bool READ_IO(unsigned char IO);
-void SPIn_Init(char SPI_num,char SCK_pin,char MISO_pin,char MOSI_pin,char CS_pin,char remap);
+void SPIn_Init(char SPI_num,unsigned char SCK_pin,unsigned char MISO_pin,unsigned char MOSI_pin,unsigned char CS_pin,char remap);
 u8 SPIn_ReadWriteByte(u8 TxData);
 u8 SD_RecvData(u8*buf,u16 len);
 u8 SD_SendBlock(u8*buf,u8 cmd);
@@ -37,6 +37,8 @@ void millis_count_init(void);
 void motor_next_isr(u16 time_n);
 char Serial_send(unsigned char buf_data);
 void FLUSH_serial0(void);
+void stm32_wdg_init(unsigned int time_out_ms);
+void stm32_wdg_feed(void);
 
 }
 #endif

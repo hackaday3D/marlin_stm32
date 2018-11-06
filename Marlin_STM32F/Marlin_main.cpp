@@ -280,17 +280,7 @@
 
 
 
-//uint32_t pgm_read_dword_near(  uint32_t *b)  { return 1;}
-uint8_t constrain(uint8_t a,uint8_t b,uint8_t c)
-{
-	if(a<=b)
-		return b;
-	else if(a>=c)
-		return c;
-	else
-		return a;
 
-}
 byte digitalRead(byte pin){ _READ(pin);}
 char analogWrite(int, char){ return 1;}
 char digitalWrite(int pin_number, unsigned char pin_status){WRITE_IO(pin_number,pin_status);}
@@ -14873,7 +14863,10 @@ main(int argc, char* argv[])
       if (++cmd_queue_index_r >= BUFSIZE) cmd_queue_index_r = 0;
     }
   }
-  endstops.event_handler();
-  idle();
-	}
+  else
+  	{
+	  endstops.event_handler();
+	  idle();
+  	}
+ }
 }

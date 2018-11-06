@@ -12,6 +12,7 @@ C_SRCS += \
 ../system/src/stm32f1-stdperiph/stm32f10x_exti.c \
 ../system/src/stm32f1-stdperiph/stm32f10x_flash.c \
 ../system/src/stm32f1-stdperiph/stm32f10x_gpio.c \
+../system/src/stm32f1-stdperiph/stm32f10x_iwdg.c \
 ../system/src/stm32f1-stdperiph/stm32f10x_pwr.c \
 ../system/src/stm32f1-stdperiph/stm32f10x_rcc.c \
 ../system/src/stm32f1-stdperiph/stm32f10x_rtc.c \
@@ -28,6 +29,7 @@ OBJS += \
 ./system/src/stm32f1-stdperiph/stm32f10x_exti.o \
 ./system/src/stm32f1-stdperiph/stm32f10x_flash.o \
 ./system/src/stm32f1-stdperiph/stm32f10x_gpio.o \
+./system/src/stm32f1-stdperiph/stm32f10x_iwdg.o \
 ./system/src/stm32f1-stdperiph/stm32f10x_pwr.o \
 ./system/src/stm32f1-stdperiph/stm32f10x_rcc.o \
 ./system/src/stm32f1-stdperiph/stm32f10x_rtc.o \
@@ -44,6 +46,7 @@ C_DEPS += \
 ./system/src/stm32f1-stdperiph/stm32f10x_exti.d \
 ./system/src/stm32f1-stdperiph/stm32f10x_flash.d \
 ./system/src/stm32f1-stdperiph/stm32f10x_gpio.d \
+./system/src/stm32f1-stdperiph/stm32f10x_iwdg.d \
 ./system/src/stm32f1-stdperiph/stm32f10x_pwr.d \
 ./system/src/stm32f1-stdperiph/stm32f10x_rcc.d \
 ./system/src/stm32f1-stdperiph/stm32f10x_rtc.d \

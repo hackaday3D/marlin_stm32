@@ -50,8 +50,18 @@
 #endif
 #define Y_MIN_PIN          0xDA//0xE3
 #define Y_MAX_PIN          0xBD//0xE2
-#define Z_MIN_PIN          0xBC//0xE1
-#define Z_MAX_PIN          0xBC//0xE0
+
+#define Z_MAX_PIN           0xBC//0xE0
+
+#if ENABLED(BLTOUCH)
+#define Z_MIN_PIN          0xAB//0xE1
+
+#else
+#define Z_MIN_PIN            0xBF//0xE1
+
+#endif
+
+
 
 //
 // Z Probe (when not Z_MIN_PIN)

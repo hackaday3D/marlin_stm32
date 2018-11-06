@@ -36,7 +36,8 @@ watchdog.o: ../watchdog.cpp ../Marlin.h ../MarlinConfig.h ../boards.h \
  ../system/include/stm32f1-stdperiph/stm32f10x_usart.h \
  ../system/include/stm32f1-stdperiph/stm32f10x_wwdg.h \
  ../system/include/stm32f1-stdperiph/misc.h \
- ../system/include/stm32f1-stdperiph/stm32f10x_usart.h ../watchdog.h
+ ../system/include/stm32f1-stdperiph/stm32f10x_usart.h \
+ ../system/include/stm32f1-stdperiph/stm32f10x_iwdg.h ../watchdog.h
 
 ../Marlin.h:
 
@@ -151,5 +152,7 @@ watchdog.o: ../watchdog.cpp ../Marlin.h ../MarlinConfig.h ../boards.h \
 ../system/include/stm32f1-stdperiph/misc.h:
 
 ../system/include/stm32f1-stdperiph/stm32f10x_usart.h:
+
+../system/include/stm32f1-stdperiph/stm32f10x_iwdg.h:
 
 ../watchdog.h:

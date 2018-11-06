@@ -39,8 +39,9 @@ endstops.o: ../endstops.cpp ../Marlin.h ../MarlinConfig.h ../boards.h \
  ../system/include/stm32f1-stdperiph/stm32f10x_usart.h ../cardreader.h \
  ../SdFile.h ../SdBaseFile.h ../SdFatConfig.h ../SdVolume.h ../Sd2Card.h \
  ../SdInfo.h ../SdFatStructs.h ../endstops.h ../temperature.h \
- ../thermistortables.h ../thermistortable_1.h ../stepper.h ../planner.h \
- ../speed_lookuptable.h ../stepper_indirection.h ../ultralcd.h
+ ../thermistortables.h ../thermistortable_1.h ../thermistortable_13.h \
+ ../stepper.h ../planner.h ../speed_lookuptable.h \
+ ../stepper_indirection.h ../ultralcd.h
 
 ../Marlin.h:
 
@@ -179,6 +180,8 @@ endstops.o: ../endstops.cpp ../Marlin.h ../MarlinConfig.h ../boards.h \
 ../thermistortables.h:
 
 ../thermistortable_1.h:
+
+../thermistortable_13.h:
 
 ../stepper.h:
 

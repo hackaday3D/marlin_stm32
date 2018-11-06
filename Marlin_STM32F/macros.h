@@ -112,7 +112,11 @@ typedef  uint32_t  unsigned int
 #define OUTPUT 1
 #define INPUT 0
 
-uint8_t constrain(uint8_t a,uint8_t b,uint8_t c) ;
+//uint32_t pgm_read_dword_near(  uint32_t *b)  { return 1;}
+ #define constrain(  a,  b,  c)   (a>b?a:b)<c?(a>b?a:b):c//{if(a>b&&a<c) return a; else if(a<=b) return b; else return c;}
+
+
+
 byte digitalRead(byte pin);
 char analogWrite(int, char);
 char digitalWrite(int pin_number, unsigned char pin_status);

@@ -21,6 +21,8 @@
  */
 
 #include "Marlin.h"
+#include "stm32f10x_iwdg.h"
+
 
 #if ENABLED(USE_WATCHDOG)
 
@@ -28,6 +30,29 @@
 
 // Initialize watchdog with 8s timeout, if possible. Otherwise, make it 4s.
 void watchdog_init() {
+#if STM32_LJ
+// Tout=((4*2^prer)*rlr)/40 (ms).
+
+#define LSI_FREQ   40000/32
+
+ /*Enables write access to IWDG_PR and IWDG_RLR registers */
+    IWDG_WriteAccessCmd(IWDG_WriteAccess_Enable);
+    /*Set prescaler value*/
+    IWDG_SetPrescaler(IWDG_Prescaler_64);
+    /*Set reload value
+    Counter Reload Value = 250ms/IWDG counter clock period
+                          = 250ms / (LSI/32)
+                          = 0.25s / (LsiFreq/32)
+                          = LsiFreq/(32 * 4)
+                          = LsiFreq/128
+   */
+    IWDG_SetReload(LSI_FREQ);
+    /*Download reload value to register*/
+    IWDG_ReloadCounter();
+	IWDG_Enable();
+
+
+#endif
   #if ENABLED(WATCHDOG_DURATION_8S) && defined(WDTO_8S)
     #define WDTO_NS WDTO_8S
   #else
@@ -43,7 +68,7 @@ void watchdog_init() {
     _WD_CONTROL_REG = _BV(WDIE) | (WDTO_NS & 0x07) | ((WDTO_NS & 0x08) << 2); // WDTO_NS directly does not work. bit 0-2 are consecutive in the register but the highest value bit is at bit 5
                                                                               // So worked for up to WDTO_2S
     sei();
-    wdt_reset();
+    wdt_reset(); 
   #else
  //   wdt_enable(WDTO_NS); // The function handles the upper bit correct.
   #endif
