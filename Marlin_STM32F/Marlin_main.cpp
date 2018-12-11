@@ -1252,8 +1252,8 @@ inline void get_serial_commands() {
           }
         }
         else if (n == -1) {
-          SERIAL_ERROR_START();
-          SERIAL_ECHOLNPGM(MSG_SD_ERR_READ);
+        //  SERIAL_ERROR_START();
+         // SERIAL_ECHOLNPGM(MSG_SD_ERR_READ);
         }
         if (sd_char == '#') stop_buffering = true;
 

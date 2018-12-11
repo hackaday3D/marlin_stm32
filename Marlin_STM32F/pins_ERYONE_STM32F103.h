@@ -216,7 +216,7 @@
 #endif
 
 #define HEATER_0_PIN       RAMPS_D10_PIN
-#define FAN_SOFT_PWM
+//#define FAN_SOFT_PWM
 #if ENABLED(IS_RAMPS_EFB)                      // Hotend, Fan, Bed
 
   #define FAN_PIN        RAMPS_D9_PIN

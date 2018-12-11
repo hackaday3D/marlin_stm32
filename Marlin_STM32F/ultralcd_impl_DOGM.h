@@ -313,13 +313,15 @@ void lcd_printPGM_utf(const char *str, uint8_t n=LCD_WIDTH) {
       lcd_custom_bootscreen();
     #endif
 
-    constexpr uint8_t offy =
+    constexpr uint8_t offy = 
+    
       #if ENABLED(START_BMPHIGH)
         (LCD_PIXEL_HEIGHT - (START_BMPHEIGHT)) / 2
       #else
 	    0
         //DOG_CHAR_HEIGHT
       #endif
+      
     ;
 
     const uint8_t width = u8g.getWidth(), height = u8g.getHeight(),

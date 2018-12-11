@@ -33,7 +33,7 @@ void watchdog_init() {
 #if STM32_LJ
 // Tout=((4*2^prer)*rlr)/40 (ms).
 
-#define LSI_FREQ   40000/32
+#define LSI_FREQ   40000/16//40000/32
 
  /*Enables write access to IWDG_PR and IWDG_RLR registers */
     IWDG_WriteAccessCmd(IWDG_WriteAccess_Enable);

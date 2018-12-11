@@ -59,7 +59,7 @@
     static constexpr uint8_t heater_ttbllen_map[HOTENDS] = ARRAY_BY_HOTENDS(HEATER_0_TEMPTABLE_LEN, HEATER_1_TEMPTABLE_LEN, HEATER_2_TEMPTABLE_LEN, HEATER_3_TEMPTABLE_LEN, HEATER_4_TEMPTABLE_LEN);
   #endif
 #endif
-	 static	float temperature_buffer[4][32];
+	 static	u16 temperature_buffer[4][32];
 	
 	 static  u16 time_count;
 	
@@ -905,7 +905,7 @@ void Temperature::manage_heater() {
   void Temperature::Temperature_Handler(void)
   {
 #if 1
-if(temperature_count<32)
+	if(temperature_count<32)
 	  {    
 		  temperature_buffer[0][temperature_count]= Read_ADC_Raw[0];
 		  temperature_buffer[1][temperature_count]= Read_ADC_Raw[1];
@@ -941,7 +941,7 @@ float Temperature::Get_Temperature(u8 hot_heat_num)
     u8 j=0,k=0;
     u16 temp=0;
 
-  for(j=1;j<=31;j++) 
+    for(j=1;j<=31;j++) 
     { 
         for (k=0;k<32-j;k++)
         {
@@ -961,17 +961,17 @@ float Temperature::Get_Temperature(u8 hot_heat_num)
     temp = temp>>2;
     i = 1;
 
-    {
+    
 
-         while((i<301)&&(temp< Temperature_Table_B3950[i]))
-        {
-            i++;
-        }
-         gt[hot_heat_num] = (float)(Temperature_Table_B3950[i] -Temperature_Table_B3950[i+1]);
-         gt[hot_heat_num] = 1.0/gt[hot_heat_num];
-         gt[hot_heat_num] = (float)(Temperature_Table_B3950[i] - temp)*gt[hot_heat_num];
-         gt[hot_heat_num]+= (float)(i);
-    }
+	while((i<301)&&(temp< Temperature_Table_B3950[i]))
+	{
+		i++;
+	}
+	gt[hot_heat_num] = (float)(Temperature_Table_B3950[i] -Temperature_Table_B3950[i+1]);
+	gt[hot_heat_num] = 1.0/gt[hot_heat_num];
+	gt[hot_heat_num] = (float)(Temperature_Table_B3950[i] - temp)*gt[hot_heat_num];
+	gt[hot_heat_num]+= (float)(i);
+    
 
     return gt[hot_heat_num];
 }	
@@ -1214,8 +1214,9 @@ void Temperature::init() {
   #endif
 
   #if HAS_FAN0
-    SET_OUTPUT(FAN_PIN);
+   
     #if ENABLED(FAST_PWM_FAN)
+	  SET_OUTPUT(FAN_PIN);
       setPwmFrequency(FAN_PIN, 1); // No prescaling. Pwm frequency = F_CPU/256/8
     #endif
   #endif

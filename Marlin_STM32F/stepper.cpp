@@ -1907,7 +1907,7 @@ uint32_t Stepper::stepper_block_phase_isr() {
       // Enforce a minimum duration for STEP pulse ON
       #if MINIMUM_STEPPER_PULSE
         // Just wait for the requested pulse duration
-        while (HAL_timer_get_count(PULSE_TIMER_NUM) < pulse_end) { /* nada */ }
+       //robert  while (HAL_timer_get_count(PULSE_TIMER_NUM) < pulse_end) { /* nada */ }
       #endif
 
       // Add the delay needed to ensure the maximum driver rate is enforced
@@ -1930,7 +1930,7 @@ uint32_t Stepper::stepper_block_phase_isr() {
       // For minimum pulse time wait before looping
       // Just wait for the requested pulse duration
       if (LA_steps) {
-        while (HAL_timer_get_count(PULSE_TIMER_NUM) < pulse_end) { /* nada */ }
+        //robert while (HAL_timer_get_count(PULSE_TIMER_NUM) < pulse_end) { /* nada */ }
         #if MINIMUM_STEPPER_PULSE
           // Add to the value, the time that the pulse must be active (to be used on the next loop)
           pulse_end += hal_timer_t(MIN_PULSE_TICKS);

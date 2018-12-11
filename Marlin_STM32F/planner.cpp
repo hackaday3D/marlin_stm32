@@ -1303,7 +1303,11 @@ void Planner::check_axes_activity() {
       #endif
     #else
       #if HAS_FAN0
+	   #if STM32_LJ
+	    TIM_SetCompare1(TIM3,FAN_MAX_PWM- CALC_FAN_SPEED(0));  
+	   #else
         analogWrite(FAN_PIN, CALC_FAN_SPEED(0));
+	   #endif
       #endif
       #if HAS_FAN1
         analogWrite(FAN1_PIN, CALC_FAN_SPEED(1));
