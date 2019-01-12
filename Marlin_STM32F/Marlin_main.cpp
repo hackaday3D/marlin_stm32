@@ -14405,9 +14405,10 @@ void idle(
   #if ENABLED(MAX7219_DEBUG)
     max7219.idle_tasks();
   #endif
-
-  lcd_update();
-
+//test
+    lcd_update();
+ //  feedrate_percentage=200;
+///
   host_keepalive();
 
   manage_inactivity(
@@ -14762,6 +14763,7 @@ void setup() {
   #if ENABLED(USE_WATCHDOG)
     watchdog_init();
   #endif
+	SET_INPUT(0xE0);
 }
 
 /**
@@ -14778,10 +14780,23 @@ void setup() {
 int
 main(int argc, char* argv[])
  {
+ 	int filemant_stat=0;
    	setup() ;
-
 	while(1)
 	{
+		if(print_job_timer.isRunning()==false)
+		{
+			if(digitalRead(0xe0)!=filemant_stat)
+			{
+				if(digitalRead(0xe0)==0)
+				{
+					enqueue_and_echo_command("M117 please heat nozzle");
+					enqueue_and_echo_command("G92 E0");
+					enqueue_and_echo_command("G1 E80");
+				}
+				filemant_stat=digitalRead(0xe0);
+			}
+		}
 
   #if ENABLED(SDSUPPORT)
 

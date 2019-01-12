@@ -7,7 +7,7 @@
 extern "C" {
 
 
-#define STM32_FLASH_SIZE 512 	 		//STM32 flash size  (unit k)
+#define STM32_FLASH_SIZE 256//512 	 		//STM32 flash size  (unit k)
 #define STM32_FLASH_WREN 1              //flash write enable (0:disable  ;1:enable)
 
 //FLASH start addr
@@ -24,11 +24,11 @@ void STMFLASH_Write2(u32 WriteAddr,u16 *pBuffer,u16 NumToWrite)	;
 void STMFLASH_Erase(u32 WriteAddr,u16 NumToWrite);
 //≤‚ ‘–¥»Î
 void Test_Write(u32 WriteAddr,u16 WriteData);		
-char eeprom_write_byte( uint8_t *addr, uint8_t v);
+char eeprom_write_byte( u32 *addr, uint8_t v);
 
-unsigned char eeprom_read_byte( uint8_t *  addr);
-unsigned char eeprom_read_block(uint8_t *buf,uint8_t *addr, int len);
-char eeprom_write_block( uint8_t *addr, uint8_t *value,u16 len);
+unsigned char eeprom_read_byte( u32 *  addr);
+unsigned char eeprom_read_block(uint8_t *buf,u32 *addr, int len);
+char eeprom_write_block( u32 *addr, uint8_t *value,u16 len);
 
 }
 #endif

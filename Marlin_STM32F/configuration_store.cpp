@@ -37,9 +37,10 @@
  */
 
 // Change EEPROM version if the structure changes
-#define EEPROM_VERSION "V55"
+#define EEPROM_VERSION "V56"
 #define EEPROM_OFFSET 0x08032000//0X0807F800//luojin  100
 #define HARDWARE_VERSION_ADDR  0x08033000  
+
 
 // Check the integrity of data offsets.
 // Can be disabled for production build.
@@ -56,6 +57,9 @@
 #include "parser.h"
 #include "vector_3.h"
 #include "stmflash.h"
+#if ENABLED(USE_WATCHDOG)
+  #include "watchdog.h"
+#endif
 
 #if ENABLED(MESH_BED_LEVELING)
   #include "mesh_bed_leveling.h"
@@ -360,9 +364,13 @@ void MarlinSettings::postprocess() {
 
   void MarlinSettings::write_data(int &pos, const uint8_t *value, uint16_t size, uint16_t *crc) {
     if (eeprom_error) { pos += size; return; }
+#if ENABLED(USE_WATCHDOG)//robert
+	   // Reset the watchdog after we know we have a temperature measurement.
+	   watchdog_reset();
+ #endif
 
     while (size--) {
-      uint8_t * const p = (uint8_t * const)pos;
+    	uint32_t * const p = (uint32_t * const)pos;
       uint8_t v = *value;
       // EEPROM has only ~100,000 write cycles,
       // so only write bytes that have changed!
@@ -387,7 +395,7 @@ void MarlinSettings::postprocess() {
   void MarlinSettings::read_data(int &pos, uint8_t* value, uint16_t size, uint16_t *crc, const bool force/*=false*/) {
     if (eeprom_error) { pos += size; return; }
     do {
-      uint8_t c = eeprom_read_byte((unsigned char*)pos);
+      uint8_t c = eeprom_read_byte((uint32_t*)pos);
       if (!validating || force) *value = c;
       crc16(crc, &c, 1);
       pos++;
