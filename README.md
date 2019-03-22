@@ -1,4 +1,4 @@
-# Porting Marlin 1.1.9 to stm32f103 successful, and can print now!
+# Upgrade your 3D printer from 8bit to 32bit stm32 based on marlin1.1.9
 
 ![Opensource](https://github.com/hackaday3D/marlin_stm32/raw/master/image/stm32v1.jpg)
 
