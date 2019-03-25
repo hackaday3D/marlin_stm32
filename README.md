@@ -18,6 +18,23 @@ https://www.dropbox.com/s/uhg7focg0how45b/Compile_Download_Tool.zip?dl=0
 
 *Download the hex file to STM32 board by click the 'Upload' button.  
 
+ ### hardware board features:
+ *Integrated 5 silent stepper drivers TMC2208,control it through uart;
+
+ *Auto controlled Fan on big cooling fins shell,prevent fan from pulling in dust to motherboard directly;
+
+*with board monitor temperature sensor, software can control the Fan automatically and protect printed model as stepper driver will reboot while over temperature;
+
+*lower price than any other 32bit motherboard, almost the same as the 8bit board;
+
+*Support 2 extruders;
+
+*Highly current, support 400w big hotbed;
+
+*Integrate power off detector with super capacitance;
+
+*Highly integrated, small size;
+
 
 
 
