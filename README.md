@@ -11,7 +11,7 @@ download link:
 https://www.dropbox.com/s/uhg7focg0how45b/Compile_Download_Tool.zip?dl=0
   or  https://120.77.81.60/svn/software/Compile_Download_Tool.zip (user:guest password:guest)
 
-### How to use? 
+### How to use NanoFactory? 
 *Choose source code path by open the project.erw which in the source code folder; 
 
 *Compile the source code by click the 'Verify'button;  
@@ -19,6 +19,7 @@ https://www.dropbox.com/s/uhg7focg0how45b/Compile_Download_Tool.zip?dl=0
 *Download the hex file to STM32 board by click the 'Upload' button.  
 
  ### hardware board features:
+ ![Opensource](https://github.com/hackaday3D/marlin_stm32/raw/master/image/4font.png)
  *Integrated 5 silent stepper drivers TMC2208,control it through uart;
 
  *Auto controlled Fan on big cooling fins shell,prevent fan from pulling in dust to motherboard directly;
