@@ -59,7 +59,7 @@
 #endif
 
 #if HAS_DRIVER(TMC2208)
-  #include <TMC2208Stepper.h>
+  #include "TMC2208Stepper/TMC2208Stepper.h"
   void tmc2208_serial_begin();
   void tmc2208_init_to_defaults();
 #endif

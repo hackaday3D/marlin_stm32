@@ -38,8 +38,8 @@
 
 // Change EEPROM version if the structure changes
 #define EEPROM_VERSION "V56"
-#define EEPROM_OFFSET 0x08032000//0X0807F800//luojin  100
-#define HARDWARE_VERSION_ADDR  0x08033000  
+#define EEPROM_OFFSET 0x08038000//0X0807F800//luojin  100
+#define HARDWARE_VERSION_ADDR  0x0803A000  
 
 
 // Check the integrity of data offsets.

@@ -30,6 +30,7 @@
 
 // Initialize watchdog with 8s timeout, if possible. Otherwise, make it 4s.
 void watchdog_init() {
+
 #if STM32_LJ
 // Tout=((4*2^prer)*rlr)/40 (ms).
 

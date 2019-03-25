@@ -278,23 +278,37 @@
 #if HAS_DRIVER(TMC2208)
 
   #undef HardwareSerial_h // undo Marlin trickery
-  #include <SoftwareSerial.h>
-  #include <HardwareSerial.h>
-  #include <TMC2208Stepper.h>
+  //#include <SoftwareSerial.h>
+  //#include "HardwareSerial.h"
+  #include "TMC2208Stepper/TMC2208Stepper.h"
   #include "planner.h"
+
+#include "MarlinSerial.h"
+MarlinSerial customizedSerial5;
+
+
+#define X_HARDWARE_SERIAL   customizedSerial5
+#define Y_HARDWARE_SERIAL   customizedSerial5
+#define Z_HARDWARE_SERIAL   customizedSerial5
+#define E0_HARDWARE_SERIAL   customizedSerial5
+#define E1_HARDWARE_SERIAL   customizedSerial5
 
   #if TMC2208STEPPER_VERSION < 0x000101
     #error "Update TMC2208Stepper library to 0.1.1 or newer."
   #endif
 
-  #define _TMC2208_DEFINE_HARDWARE(ST) TMC2208Stepper stepper##ST(&ST##_HARDWARE_SERIAL)
-  #define _TMC2208_DEFINE_SOFTWARE(ST) SoftwareSerial ST##_HARDWARE_SERIAL = SoftwareSerial(ST##_SERIAL_RX_PIN, ST##_SERIAL_TX_PIN); \
-                                       TMC2208Stepper stepper##ST(&ST##_HARDWARE_SERIAL, ST##_SERIAL_RX_PIN > -1)
 
+
+ // #define _TMC2208_DEFINE_HARDWARE(ST) TMC2208Stepper stepper##ST(&ST##_HARDWARE_SERIAL)
+#define _TMC2208_DEFINE_HARDWARE(ST) TMC2208Stepper stepper##ST(&ST##_HARDWARE_SERIAL)
+//  #define _TMC2208_DEFINE_SOFTWARE(ST) SoftwareSerial ST##_HARDWARE_SERIAL = SoftwareSerial(ST##_SERIAL_RX_PIN, ST##_SERIAL_TX_PIN); \
+ //                                      TMC2208Stepper stepper##ST(&ST##_HARDWARE_SERIAL, ST##_SERIAL_RX_PIN > -1)
+#if 1
   // Stepper objects of TMC2208 steppers used
   #if AXIS_DRIVER_TYPE(X, TMC2208)
     #ifdef X_HARDWARE_SERIAL
-      _TMC2208_DEFINE_HARDWARE(X);
+      //_TMC2208_DEFINE_HARDWARE(X);
+      TMC2208Stepper stepperX(&X_HARDWARE_SERIAL);
     #else
       _TMC2208_DEFINE_SOFTWARE(X);
     #endif
@@ -369,8 +383,9 @@
       _TMC2208_DEFINE_SOFTWARE(E4);
     #endif
   #endif
-
+#endif
   void tmc2208_serial_begin() {
+#if 0
     #if AXIS_DRIVER_TYPE(X, TMC2208)
       X_HARDWARE_SERIAL.begin(115200);
     #endif
@@ -404,6 +419,7 @@
     #if AXIS_DRIVER_TYPE(E4, TMC2208)
       E4_HARDWARE_SERIAL.begin(115200);
     #endif
+#endif
   }
 
   // Use internal reference voltage for current calculations. This is the default.
@@ -412,8 +428,9 @@
     st.pdn_disable(true); // Use UART
     st.mstep_reg_select(true); // Select microsteps with UART
     st.I_scale_analog(false);
-    st.rms_current(mA, HOLD_MULTIPLIER, R_SENSE);
-    st.microsteps(microsteps);
+     st.rms_current(mA, HOLD_MULTIPLIER, R_SENSE);
+  st.microsteps(microsteps);
+ //  st.microsteps(2);
     st.blank_time(24);
     st.toff(5);
     st.intpol(INTERPOLATE);
@@ -439,7 +456,7 @@
       st.en_spreadCycle(true);
     #endif
     st.GSTAT(0b111); // Clear
-    delay(200);
+    //delay(2);
   }
 
   #define _TMC2208_INIT(ST, SPMM) tmc2208_init(stepper##ST, ST##_CURRENT, ST##_MICROSTEPS, ST##_HYBRID_THRESHOLD, SPMM)
@@ -526,7 +543,7 @@ void reset_stepper_drivers() {
     tmc2130_init_to_defaults();
   #endif
   #if HAS_DRIVER(TMC2208)
-    delay(100);
+  //  delay(100);
     tmc2208_init_to_defaults();
   #endif
   #ifdef TMC_ADV

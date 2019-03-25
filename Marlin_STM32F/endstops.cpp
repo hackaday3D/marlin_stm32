@@ -106,7 +106,8 @@ void Endstops::init() {
     #if ENABLED(ENDSTOPPULLUP_ZMIN)
       SET_INPUT_PULLUP(Z_MIN_PIN);
     #else
-      SET_INPUT(Z_MIN_PIN);
+     // SET_INPUT(Z_MIN_PIN);
+	  SET_INPUT_PULLUP(Z_MIN_PIN);
     #endif
   #endif
 
@@ -473,7 +474,13 @@ void Endstops::update() {
     #elif ENABLED(Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN)
       UPDATE_ENDSTOP_BIT(Z, MIN);
     #elif Z_HOME_DIR < 0
-      UPDATE_ENDSTOP_BIT(Z, MIN);
+    //  UPDATE_ENDSTOP_BIT(Z, MIN);
+      do{
+    	  if ((READ_IO(0xA4) != true))
+    		  (live_state |= (1 << (Z_MIN)));
+    	  else
+    		  (live_state &= ~(1 << (Z_MIN)));
+      }while(0);
     #endif
   #endif
 

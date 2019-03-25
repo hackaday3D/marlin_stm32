@@ -41,7 +41,8 @@ endstops.o: ../endstops.cpp ../Marlin.h ../MarlinConfig.h ../boards.h \
  ../SdInfo.h ../SdFatStructs.h ../endstops.h ../temperature.h \
  ../thermistortables.h ../thermistortable_1.h ../thermistortable_13.h \
  ../stepper.h ../planner.h ../speed_lookuptable.h \
- ../stepper_indirection.h ../ultralcd.h
+ ../stepper_indirection.h ../TMC2208Stepper/TMC2208Stepper.h \
+ ../TMC2208Stepper/../MarlinSerial.h ../ultralcd.h
 
 ../Marlin.h:
 
@@ -190,5 +191,9 @@ endstops.o: ../endstops.cpp ../Marlin.h ../MarlinConfig.h ../boards.h \
 ../speed_lookuptable.h:
 
 ../stepper_indirection.h:
+
+../TMC2208Stepper/TMC2208Stepper.h:
+
+../TMC2208Stepper/../MarlinSerial.h:
 
 ../ultralcd.h:

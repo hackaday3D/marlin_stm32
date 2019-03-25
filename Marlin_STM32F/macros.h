@@ -118,7 +118,8 @@ typedef  uint32_t  unsigned int
 
 
 byte digitalRead(byte pin);
-char analogWrite(int, char);
+ char analogWrite(int pin_number, unsigned char pin_status);
+
 char digitalWrite(int pin_number, unsigned char pin_status);
 //char pinMode(int pin_number, unsigned char pin_status);
 

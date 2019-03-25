@@ -496,7 +496,6 @@ void CardReader::write_command(char *buf) {
 void CardReader::checkautostart() {
 
   if (autostart_index < 0 || sdprinting) return;
-
   if (!cardOK) initsd();
 
   if (cardOK

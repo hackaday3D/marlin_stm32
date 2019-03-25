@@ -59,7 +59,7 @@
     static constexpr uint8_t heater_ttbllen_map[HOTENDS] = ARRAY_BY_HOTENDS(HEATER_0_TEMPTABLE_LEN, HEATER_1_TEMPTABLE_LEN, HEATER_2_TEMPTABLE_LEN, HEATER_3_TEMPTABLE_LEN, HEATER_4_TEMPTABLE_LEN);
   #endif
 #endif
-	 static	u16 temperature_buffer[4][32];
+	 // 	u16 temperature_buffer[4][32];
 	
 	 static  u16 time_count;
 	
@@ -680,8 +680,11 @@ float Temperature::get_pid_output(const int8_t e) {
       pid_output = constrain(target_temperature[HOTEND_INDEX], 0, PID_MAX);
     #endif // PID_OPENLOOP
 	 
-
     #if ENABLED(PID_DEBUG)
+	static int kk=0;
+	kk++;
+	if(kk%1000==0)
+	{
       SERIAL_ECHO_START();
       SERIAL_ECHOPAIR(MSG_PID_DEBUG, HOTEND_INDEX);
       SERIAL_ECHOPAIR(MSG_PID_DEBUG_INPUT, current_temperature[HOTEND_INDEX]);
@@ -693,8 +696,8 @@ float Temperature::get_pid_output(const int8_t e) {
         SERIAL_ECHOPAIR(MSG_PID_DEBUG_CTERM, cTerm[HOTEND_INDEX]);
       #endif
       SERIAL_EOL();
+	 }
     #endif // PID_DEBUG
-
   #else /* PID off */
     #if HEATER_IDLE_HANDLER
       if (heater_idle_timeout_exceeded[HOTEND_INDEX])
@@ -901,30 +904,24 @@ void Temperature::manage_heater() {
   #endif // HAS_HEATED_BED
 }
 
-	
   void Temperature::Temperature_Handler(void)
   {
-#if 1
-	if(temperature_count<32)
-	  {    
-		  temperature_buffer[0][temperature_count]= Read_ADC_Raw[0];
-		  temperature_buffer[1][temperature_count]= Read_ADC_Raw[1];
-		  temperature_buffer[2][temperature_count]= Read_ADC_Raw[2];
-		  temperature_buffer[3][temperature_count]= Read_ADC_Raw[3];
-		  temperature_count++;
-	  }
-  
-	  if(time_count >= /*Setting.temperature_sampling_period*/3 * 100)// 0.3s Detect temperature once
-	  {
-		  time_count=0;
-		  if(temperature_count==32)
-		  {
-			 // Gloabl_temperature_control();
-			  temperature_count=0;						  
-		  }
-	  }
-	  else time_count++;
-#endif	  
+  //////////////board temperature control
+    static int k=0,board_fan_old=0;
+	int board_fan=0;
+	k++;
+    if(k>1000*5)
+    {
+    	k=0;
+    	Get_Temperature(3);
+		board_fan=gt[3]>65.0?1:0;
+		if(board_fan_old!=board_fan)
+		{
+			board_fan_old=board_fan;
+			OUT_WRITE(FAN3_PIN,board_fan);
+		}
+    }
+ ///////////////////
   }
 
  /**********************************************************
@@ -936,43 +933,35 @@ void Temperature::manage_heater() {
 ***********************************************************/
 float Temperature::Get_Temperature(u8 hot_heat_num)
 {
-   
-    u16 i = 1;
-    u8 j=0,k=0;
+    int j=0;
     u16 temp=0;
-
-    for(j=1;j<=31;j++) 
-    { 
-        for (k=0;k<32-j;k++)
-        {
-            if (temperature_buffer[hot_heat_num][k]>temperature_buffer[hot_heat_num][k+1]) 
-            { 
-                temp = (u16)temperature_buffer[hot_heat_num][k]; 
-                temperature_buffer[hot_heat_num][k]=temperature_buffer[hot_heat_num][k+1]; 
-                temperature_buffer[hot_heat_num][k+1]=temp;
-            } 
-        }
-    } 
-    temp = 0;
-    for(j=10;j<14;j++)
-    {
-        temp += temperature_buffer[hot_heat_num][j];
-    }
-    temp = temp>>2;
-    i = 1;
-
-    
-
-	while((i<301)&&(temp< Temperature_Table_B3950[i]))
+	u32 temp_s=0;
+	temp_s=0;
+	for(j=0;j<32;j++)
 	{
-		i++;
+		temp_s+=Read_ADC_Raw[j][hot_heat_num];
 	}
-	gt[hot_heat_num] = (float)(Temperature_Table_B3950[i] -Temperature_Table_B3950[i+1]);
-	gt[hot_heat_num] = 1.0/gt[hot_heat_num];
-	gt[hot_heat_num] = (float)(Temperature_Table_B3950[i] - temp)*gt[hot_heat_num];
-	gt[hot_heat_num]+= (float)(i);
-    
-
+	temp=temp_s/32;
+	gt[hot_heat_num]=0;
+	//////////////
+	for(j=175;j<300;j++)
+	{
+		if((temp>=Temperature_Table_B3950[j+1])&&(temp<=Temperature_Table_B3950[j]))
+		{
+			gt[hot_heat_num]=(float)(j);
+			return gt[hot_heat_num];
+			
+		}
+	}
+	for(j=0;j<180;j++)
+	{
+		if((temp>=Temperature_Table_B3950[j+1])&&(temp<=Temperature_Table_B3950[j]))
+		{
+			gt[hot_heat_num]=(float)(j);			
+			return gt[hot_heat_num];
+		}
+	 }
+	//////////////
     return gt[hot_heat_num];
 }	
 
@@ -1078,6 +1067,7 @@ float Temperature::analog2temp(const int raw, const uint8_t e) {
   // Derived from RepRap FiveD extruder::getTemperature()
   // For bed temperature measurement.
   float Temperature::analog2tempBed(const int raw) {
+    Get_Temperature(3);//board tmep
    return   Get_Temperature(2);
     #if ENABLED(HEATER_BED_USES_THERMISTOR)
       SCAN_THERMISTOR_TABLE(BEDTEMPTABLE, BEDTEMPTABLE_LEN);
@@ -1114,6 +1104,7 @@ float Temperature::analog2temp(const int raw, const uint8_t e) {
  * as it would block the stepper routine.
  */
 void Temperature::updateTemperaturesFromRawValues() {
+ 
   #if ENABLED(HEATER_0_USES_MAX6675)
     current_temperature_raw[0] = read_max6675();
   #endif
@@ -1135,6 +1126,10 @@ void Temperature::updateTemperaturesFromRawValues() {
     // Reset the watchdog after we know we have a temperature measurement.
     watchdog_reset();
   #endif
+
+   
+   
+
 
   temp_meas_ready = false;
 }
@@ -1214,7 +1209,7 @@ void Temperature::init() {
   #endif
 
   #if HAS_FAN0
-   
+   SET_OUTPUT(FAN_PIN);
     #if ENABLED(FAST_PWM_FAN)
 	  SET_OUTPUT(FAN_PIN);
       setPwmFrequency(FAN_PIN, 1); // No prescaling. Pwm frequency = F_CPU/256/8
@@ -1249,6 +1244,8 @@ void Temperature::init() {
   #endif // HEATER_0_USES_MAX6675
 
   HAL_adc_init();
+ // HAL_ANALOG_SELECT(TEMP_2_PIN);
+  //HAL_START_ADC(TEMP_2_PIN);
 
   #if HAS_TEMP_ADC_0
     HAL_ANALOG_SELECT(TEMP_0_PIN);
@@ -1368,7 +1365,7 @@ void Temperature::init() {
   #endif
   #if HOTENDS > 1
     #ifdef HEATER_1_MINTEMP
-      TEMP_MIN_ROUTINE(1);
+    //robert   TEMP_MIN_ROUTINE(1);
     #endif
     #ifdef HEATER_1_MAXTEMP
       TEMP_MAX_ROUTINE(1);

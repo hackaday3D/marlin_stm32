@@ -11,7 +11,7 @@
 #include "stm32f10x_usart.h"
 extern "C" {
 
-extern	 __IO  u16 Read_ADC_Raw[5] ;
+extern	 __IO  u16 Read_ADC_Raw[32][4] ;
 void Serial_PC(const long baud);
 void USART1_IRQHandler(void);
 
@@ -36,6 +36,8 @@ unsigned long millis(void);
 void millis_count_init(void);
 void motor_next_isr(u16 time_n);
 char Serial_send(unsigned char buf_data);
+char Serial5_send(unsigned char buf_data);
+
 void FLUSH_serial0(void);
 void stm32_wdg_init(unsigned int time_out_ms);
 void stm32_wdg_feed(void);

@@ -899,6 +899,11 @@
 /**
  * Up to 3 PWM fans
  */
+#if STM32_LJ
+#define FAN_COUNT 5
+
+#endif
+ /*
 #if HAS_FAN2
   #define FAN_COUNT 3
 #elif HAS_FAN1
@@ -908,7 +913,7 @@
 #else
   #define FAN_COUNT 0
 #endif
-
+*/
 #if HAS_FAN0
   #define WRITE_FAN(v) WRITE(FAN_PIN, v)
   #define WRITE_FAN0(v) WRITE_FAN(v)

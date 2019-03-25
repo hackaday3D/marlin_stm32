@@ -25,13 +25,13 @@
 #include "temperature.h"
 
 void safe_delay(millis_t ms) {
-  while (ms > 50) {
-    ms -= 50;
-    delay(50);
+  while (ms > 200) {
+    ms -= 200;
+    delay(200);
     thermalManager.manage_heater();
   }
   delay(ms);
-  thermalManager.manage_heater(); // This keeps us safe if too many small safe_delay() calls are made
+//  thermalManager.manage_heater(); // This keeps us safe if too many small safe_delay() calls are made
 }
 
 #if ENABLED(EEPROM_SETTINGS)

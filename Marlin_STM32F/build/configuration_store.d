@@ -39,9 +39,11 @@ configuration_store.o: ../configuration_store.cpp \
  ../system/include/stm32f1-stdperiph/stm32f10x_usart.h ../endstops.h \
  ../planner.h ../temperature.h ../thermistortables.h \
  ../thermistortable_1.h ../thermistortable_13.h ../ultralcd.h \
- ../stepper.h ../speed_lookuptable.h ../stepper_indirection.h ../parser.h \
- ../vector_3.h ../system/include/stmflash.h \
- ../system/include/stm32f1-stdperiph/stm32f10x_flash.h
+ ../stepper.h ../speed_lookuptable.h ../stepper_indirection.h \
+ ../TMC2208Stepper/TMC2208Stepper.h ../TMC2208Stepper/../MarlinSerial.h \
+ ../parser.h ../vector_3.h ../system/include/stmflash.h \
+ ../system/include/stm32f1-stdperiph/stm32f10x_flash.h ../watchdog.h \
+ ../tmc_util.h
 
 ../configuration_store.h:
 
@@ -179,6 +181,10 @@ configuration_store.o: ../configuration_store.cpp \
 
 ../stepper_indirection.h:
 
+../TMC2208Stepper/TMC2208Stepper.h:
+
+../TMC2208Stepper/../MarlinSerial.h:
+
 ../parser.h:
 
 ../vector_3.h:
@@ -186,3 +192,7 @@ configuration_store.o: ../configuration_store.cpp \
 ../system/include/stmflash.h:
 
 ../system/include/stm32f1-stdperiph/stm32f10x_flash.h:
+
+../watchdog.h:
+
+../tmc_util.h:

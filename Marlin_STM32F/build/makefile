@@ -14,6 +14,7 @@ RM := rm -rf
 -include system/src/diag/subdir.mk
 -include system/src/cortexm/subdir.mk
 -include system/src/cmsis/subdir.mk
+-include TMC2208Stepper/source/subdir.mk
 -include subdir.mk
 -include objects.mk
 

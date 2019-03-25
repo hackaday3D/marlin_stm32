@@ -372,24 +372,24 @@ static void lcd_set_custom_characters(
 
     // CHARSET_MENU
     const static PROGMEM byte refresh[8] = {
-     /* B00000,
-      B00110,
-      B11001,
-      B11000,
-      B00011,
-      B10011,
-      B01100,
-      B00000,*/
+     0,
+      6,
+      0x19,
+      0x18,
+      3,
+      0x13,
+      0x0C,
+      0,
     };
     const static PROGMEM byte folder[8] = {
-    /*  B00000,
-      B11100,
-      B11111,
-      B10001,
-      B10001,
-      B11111,
-      B00000,
-      B00000*/
+    0,
+      0x1C,
+      0x1F,
+      0x11,
+      0x11,
+      0x1F,
+      0,
+      0
     };
 
   #endif // SDSUPPORT

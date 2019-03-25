@@ -36,9 +36,10 @@ planner.o: ../planner.cpp ../planner.h ../types.h ../enum.h \
  ../system/include/stm32f1-stdperiph/stm32f10x_wwdg.h \
  ../system/include/stm32f1-stdperiph/misc.h \
  ../system/include/stm32f1-stdperiph/stm32f10x_usart.h ../stepper.h \
- ../speed_lookuptable.h ../stepper_indirection.h ../temperature.h \
- ../thermistortables.h ../thermistortable_1.h ../thermistortable_13.h \
- ../ultralcd.h ../parser.h
+ ../speed_lookuptable.h ../stepper_indirection.h \
+ ../TMC2208Stepper/TMC2208Stepper.h ../TMC2208Stepper/../MarlinSerial.h \
+ ../temperature.h ../thermistortables.h ../thermistortable_1.h \
+ ../thermistortable_13.h ../ultralcd.h ../parser.h
 
 ../planner.h:
 
@@ -161,6 +162,10 @@ planner.o: ../planner.cpp ../planner.h ../types.h ../enum.h \
 ../speed_lookuptable.h:
 
 ../stepper_indirection.h:
+
+../TMC2208Stepper/TMC2208Stepper.h:
+
+../TMC2208Stepper/../MarlinSerial.h:
 
 ../temperature.h:
 

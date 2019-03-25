@@ -48,6 +48,7 @@
    * Set SCK rate to F_CPU/pow(2, 1 + spiRate) for spiRate [0,6]
    */
   static void spiInit(uint8_t spiRate) {
+  //	SET_OUTPUT(SD_SPI_CS);
     SPIn_Init(SD_SPI_NUM,SD_SPI_SCK,SD_SPI_MISO,SD_SPI_MOSI,SD_SPI_CS,SD_SPI_REMAP); 
 	return;
 #if 0	/////////
@@ -244,6 +245,7 @@ uint32_t Sd2Card::cardSize() {
 
 void Sd2Card::chipSelectHigh() {
   digitalWrite(chipSelectPin_, HIGH);
+  //OUT_WRITE(SD_SPI_CS,HIGH);
 }
 
 void Sd2Card::chipSelectLow() {
@@ -311,7 +313,7 @@ bool Sd2Card::eraseSingleBlockEnable() {
   csd_t csd;
   return readCSD(&csd) ? csd.v1.erase_blk_en : false;
 }
-
+extern int card_sd_in;
 /**
  * Initialize an SD flash memory card.
  *
@@ -325,7 +327,7 @@ bool Sd2Card::init(uint8_t sckRateID, pin_t chipSelectPin) {
   errorCode_ = type_ = 0;
   chipSelectPin_ = chipSelectPin;
   // 16-bit init start time allows over a minute
-  uint16_t t0 = (uint16_t)millis();
+  millis_t t0 = (millis_t)millis();
   uint32_t arg;
 
   // If init takes more than 4s it could trigger
@@ -337,9 +339,10 @@ bool Sd2Card::init(uint8_t sckRateID, pin_t chipSelectPin) {
   // set pin modes
   pinMode(chipSelectPin_, OUTPUT);
   chipSelectHigh();
-  SET_INPUT(SPI_MISO_PIN);
-  SET_OUTPUT(SPI_MOSI_PIN);
-  SET_OUTPUT(SPI_SCK_PIN);
+ // SET_INPUT(SPI_MISO_PIN);
+  //
+ // SET_OUTPUT(SPI_MOSI_PIN);
+ // SET_OUTPUT(SPI_SCK_PIN);
 
   #if DISABLED(SOFTWARE_SPI)
     // SS must be in output mode even it is not chip select
@@ -353,16 +356,22 @@ bool Sd2Card::init(uint8_t sckRateID, pin_t chipSelectPin) {
     spiInit(spiRate_);
   #endif  // SOFTWARE_SPI
 
+ // WRITE(SD_SPI_CS, HIGH);
+//  WRITE(SD_SPI_CS, LOW);
+
   // must supply min of 74 clock cycles with CS high.
   for (uint8_t i = 0; i < 10; i++) spiSend(0xFF);
 
-  // command to go idle in SPI mode
-  while ((status_ = cardCommand(CMD0, 0)) != R1_IDLE_STATE) {
-    if (((uint16_t)millis() - t0) > SD_INIT_TIMEOUT) {
-      error(SD_CARD_ERROR_CMD0);
-      goto FAIL;
-    }
-  }
+	if(card_sd_in==1)
+	{
+	  // command to go idle in SPI mode
+	  while ((status_ = cardCommand(CMD0, 0)) != R1_IDLE_STATE) {
+	    if (((millis_t)millis() - t0) > SD_INIT_TIMEOUT) {
+	      error(SD_CARD_ERROR_CMD0);
+	      goto FAIL;
+	    }
+	  }
+	}
   // check SD version
   if ((cardCommand(CMD8, 0x1AA) & R1_ILLEGAL_COMMAND)) {
     type(SD_CARD_TYPE_SD1);
@@ -381,7 +390,7 @@ bool Sd2Card::init(uint8_t sckRateID, pin_t chipSelectPin) {
 
   while ((status_ = cardAcmd(ACMD41, arg)) != R1_READY_STATE) {
     // check for timeout
-    if (((uint16_t)millis() - t0) > SD_INIT_TIMEOUT) {
+    if (((millis_t)millis() - t0) > SD_INIT_TIMEOUT) {
       error(SD_CARD_ERROR_ACMD41);
       goto FAIL;
     }
@@ -397,7 +406,7 @@ bool Sd2Card::init(uint8_t sckRateID, pin_t chipSelectPin) {
     for (uint8_t i = 0; i < 3; i++) spiRec();
   }
   chipSelectHigh();
-  SPIn_SetSpeed(SPI_BaudRatePrescaler_2);//set high speed mode
+  SPIn_SetSpeed(SPI_BaudRatePrescaler_8);//set high speed mode
 
   #if DISABLED(SOFTWARE_SPI)
     return setSckRate(sckRateID);
@@ -506,7 +515,7 @@ bool Sd2Card::readData(uint8_t* dst) {
 
 bool Sd2Card::readData(uint8_t* dst, uint16_t count) {
   // wait for start block token
-  uint16_t t0 = millis();
+  millis_t t0 = millis();
  /* while ((status_ = spiRec()) == 0XFF) {
     if (((uint16_t)millis() - t0) > SD_READ_TIMEOUT) {
       error(SD_CARD_ERROR_READ_TIMEOUT);
@@ -617,9 +626,9 @@ bool Sd2Card::setSckRate(uint8_t sckRateID) {
 
 // wait for card to go not busy
 bool Sd2Card::waitNotBusy(uint16_t timeoutMillis) {
-  uint16_t t0 = millis();
+  millis_t t0 = millis();
   while (spiRec() != 0XFF)
-    if (((uint16_t)millis() - t0) >= timeoutMillis) return false;
+    if (((millis_t)millis() - t0) >= timeoutMillis) return false;
 
   return true;
 }

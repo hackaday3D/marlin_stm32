@@ -282,7 +282,7 @@
 
 
 byte digitalRead(byte pin){ _READ(pin);}
-char analogWrite(int, char){ return 1;}
+char analogWrite(int pin_number, unsigned char pin_status){WRITE_IO(pin_number,pin_status);}
 char digitalWrite(int pin_number, unsigned char pin_status){WRITE_IO(pin_number,pin_status);}
 /*
 //////
@@ -299,7 +299,9 @@ static_assert(COUNT(sanity_arr_3) <= XYZE_N, "DEFAULT_MAX_ACCELERATION has too m
 FORCE_INLINE void serialprintPGM(const char* str) {
 	//while (char ch = pgm_read_byte((char *)str++)) 
 //	while (char ch = pgm_read_byte((char *)str++)) 
-    customizedSerial.write(str);
+     customizedSerial.write(str);
+  //  while (*str) Serial5_send(*str++);
+	
 }
 //robert
 void _delay_ms(int ms)
@@ -1220,6 +1222,7 @@ inline void get_serial_commands() {
       const int16_t n = card.get();
       char sd_char = (char)n;
       card_eof = card.eof();
+	  MYSERIAL0.write(sd_char);
       if (card_eof || n == -1
           || sd_char == '\n' || sd_char == '\r'
           || ((sd_char == '#' || sd_char == ':') && !sd_comment_mode)
@@ -3355,6 +3358,7 @@ void gcode_get_destination() {
     }
     else
       destination[i] = current_position[i];
+   
   }
 
   if (parser.linearval('F') > 0)
@@ -3384,8 +3388,8 @@ void gcode_get_destination() {
       switch (busy_state) {
         case IN_HANDLER:
         case IN_PROCESS:
-          SERIAL_ECHO_START();
-          SERIAL_ECHOLNPGM(MSG_BUSY_PROCESSING);
+         //luojin SERIAL_ECHO_START();
+         // SERIAL_ECHOLNPGM(MSG_BUSY_PROCESSING);
           break;
         case PAUSED_FOR_USER:
           SERIAL_ECHO_START();
@@ -14406,7 +14410,7 @@ void idle(
     max7219.idle_tasks();
   #endif
 //test
-    lcd_update();
+   lcd_update();
  //  feedrate_percentage=200;
 ///
   host_keepalive();
@@ -14527,8 +14531,14 @@ void stop() {
  *    • status LEDs
  */
 void setup() {
-   
+ // asm("CPSID  I"); 
+  //SystemInit();
+	//NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0x3000);//app base addr
+	 
+  //
   system_init_stm32();
+  //while(1);
+ // return;
 
   #if ENABLED(MAX7219_DEBUG)
     max7219.init();
@@ -14555,6 +14565,7 @@ void setup() {
   MYSERIAL0.begin(BAUDRATE);
   SERIAL_PROTOCOLLNPGM("start");
   SERIAL_ECHO_START();
+ 
 
   // Prepare communication for TMC drivers
   #if HAS_DRIVER(TMC2130)
@@ -14563,6 +14574,7 @@ void setup() {
   #if HAS_DRIVER(TMC2208)
     tmc2208_serial_begin();
   #endif
+  
 
   // Check startup - does nothing if bootloader sets MCUSR to 0
   byte mcu = 0;// robert MCUSR;
@@ -14577,6 +14589,7 @@ void setup() {
   SERIAL_CHAR(' ');
   SERIAL_ECHOLNPGM(SHORT_BUILD_VERSION);
   SERIAL_EOL();
+  
 
   #if defined(STRING_DISTRIBUTION_DATE) && defined(STRING_CONFIG_H_AUTHOR)
     SERIAL_ECHO_START();
@@ -14594,9 +14607,12 @@ void setup() {
   // Send "ok" after commands by default
   for (int8_t i = 0; i < BUFSIZE; i++) send_ok[i] = true;
 
+  
+
   // Load data from EEPROM if available (or use defaults)
   // This also updates variables in the planner, elsewhere
   (void)settings.load();
+  
 
   #if HAS_M206_COMMAND
     // Initialize current position based on home_offset
@@ -14678,6 +14694,7 @@ void setup() {
   #if HAS_COLOR_LEDS
     leds.setup();
   #endif
+  
 
   #if ENABLED(RGB_LED) || ENABLED(RGBW_LED)
     SET_OUTPUT(RGB_LED_R_PIN);
@@ -14760,11 +14777,14 @@ void setup() {
     check_print_job_recovery();
   #endif
 
+
   #if ENABLED(USE_WATCHDOG)
-    watchdog_init();
+   //luojin watchdog_init();
   #endif
-	SET_INPUT(0xE0);
+	//SET_INPUT(0xE0);
 }
+
+int card_sd_in;
 
 /**
  * The main Marlin program loop
@@ -14780,11 +14800,19 @@ void setup() {
 int
 main(int argc, char* argv[])
  {
- 	int filemant_stat=0;
+   	int filemant_stat=0;
+	
    	setup() ;
+	SET_OUTPUT(FAN3_PIN);
+	OUT_WRITE(FAN3_PIN,0);
+	SET_OUTPUT(0xEC);
+	OUT_WRITE(0xEC,1);
+	SET_OUTPUT(0xEB);
+	OUT_WRITE(0xEB,0);
+	card_sd_in=0;
 	while(1)
 	{
-		if(print_job_timer.isRunning()==false)
+	/*	if(print_job_timer.isRunning()==false)
 		{
 			if(digitalRead(0xe0)!=filemant_stat)
 			{
@@ -14796,7 +14824,7 @@ main(int argc, char* argv[])
 				}
 				filemant_stat=digitalRead(0xe0);
 			}
-		}
+		}*/
 
   #if ENABLED(SDSUPPORT)
 
@@ -14883,5 +14911,6 @@ main(int argc, char* argv[])
 	  endstops.event_handler();
 	  idle();
   	}
+   card_sd_in=1;
  }
 }

@@ -127,12 +127,12 @@ void u8g_10MicroDelay(void)
 #if 1 //robert
 
 
-void u8g_Delay(uint16_t val)
+void inline u8g_Delay(uint16_t val)
 {
-   uint16_t i=0;
+   int i=0;
    while(val--)
    {
-	  i=320;  // 
+	  i=120;  // 
 	  while(i--) ; 
    }
 }

@@ -473,7 +473,7 @@ uint16_t max_display_update_time = 0;
     constexpr bool processing_manual_move = false;
   #endif
 
-  #if PIN_EXISTS(SD_DETECT)
+  #if  PIN_EXISTS(SD_DETECT)
     uint8_t lcd_sd_status;
   #endif
 
@@ -4992,9 +4992,13 @@ void lcd_quick_feedback(const bool clear_buttons) {
 
 #endif // ULTIPANEL
 
+
+
 void lcd_init() {
 
+	
   lcd_implementation_init();
+
 
   #if ENABLED(NEWPANEL)
     #if BUTTON_EXISTS(EN1)
@@ -5008,7 +5012,6 @@ void lcd_init() {
     #endif
 
     #if ENABLED(REPRAPWORLD_KEYPAD) && DISABLED(ADC_KEYPAD)
-      rer
       SET_OUTPUT(SHIFT_CLK);
       OUT_WRITE(SHIFT_LD, HIGH);
       SET_INPUT_PULLUP(SHIFT_OUT);
@@ -5044,6 +5047,7 @@ void lcd_init() {
   #if ENABLED(SDSUPPORT) && PIN_EXISTS(SD_DETECT)
     SET_INPUT_PULLUP(SD_DETECT_PIN);
     lcd_sd_status = 2; // UNKNOWN
+   // uint8_t sd_status = READ(SD_DETECT_PIN);
   #endif
 
   #if ENABLED(LCD_HAS_SLOW_BUTTONS)
@@ -5055,6 +5059,7 @@ void lcd_init() {
   #if ENABLED(ULTIPANEL)
     encoderDiff = 0;
   #endif
+ 
 }
 
 int16_t utf8_strlen(const char* s) {
@@ -5158,36 +5163,37 @@ void lcd_update() {
 
   #endif // ULTIPANEL
 
-  #if ENABLED(SDSUPPORT) && PIN_EXISTS(SD_DETECT)
+#if ENABLED(SDSUPPORT) && PIN_EXISTS(SD_DETECT)
+	  
+		  const uint8_t sd_status = (uint8_t)IS_SD_INSERTED;
+		  if (sd_status != lcd_sd_status && lcd_detected()) {
+	  
+			uint8_t old_sd_status = lcd_sd_status; // prevent re-entry to this block!
+			lcd_sd_status = sd_status;
+	  
+			if (sd_status) {
+			  safe_delay(500); // Some boards need a delay to get settled
+			  card.initsd();
+			  if (old_sd_status == 2)
+				card.beginautostart();	// Initial boot
+			  else
+				LCD_MESSAGEPGM(MSG_SD_INSERTED);
+			}
+			else {
+			  card.release();
+			  if (old_sd_status != 2) LCD_MESSAGEPGM(MSG_SD_REMOVED);
+			}
+	  
+			lcd_refresh();
+			lcd_implementation_init( // to maybe revive the LCD if static electricity killed it.
+	  #if ENABLED(LCD_PROGRESS_BAR)
+				currentScreen == lcd_status_screen ? CHARSET_INFO : CHARSET_MENU
+	  #endif
+			);
+		  }
+	  
+#endif // SDSUPPORT && SD_DETECT_PIN
 
-    const uint8_t sd_status = (uint8_t)IS_SD_INSERTED;
-    if (sd_status != lcd_sd_status  && lcd_detected()  ) {
-
-      uint8_t old_sd_status = lcd_sd_status; // prevent re-entry to this block!
-      lcd_sd_status = sd_status;
-
-      if (sd_status) {
-        safe_delay(500); // Some boards need a delay to get settled
-        card.initsd();
-        if (old_sd_status == 2)
-          card.beginautostart();  // Initial boot
-        else
-          LCD_MESSAGEPGM(MSG_SD_INSERTED);
-      }
-      else {
-        card.release();
-        if (old_sd_status != 2) LCD_MESSAGEPGM(MSG_SD_REMOVED);
-      }
-
-      lcd_refresh();
-      lcd_implementation_init( // to maybe revive the LCD if static electricity killed it.
-        #if ENABLED(LCD_PROGRESS_BAR)
-          currentScreen == lcd_status_screen ? CHARSET_INFO : CHARSET_MENU
-        #endif
-      );
-    }
-
-  #endif // SDSUPPORT && SD_DETECT_PIN
 
   #if ENABLED(POWER_LOSS_RECOVERY)
     if (job_recovery_commands_count && job_recovery_phase == JOB_RECOVERY_IDLE) {
