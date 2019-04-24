@@ -9,7 +9,7 @@ Compile&Download_Tool:
 
 download link:  
 https://www.dropbox.com/s/uhg7focg0how45b/Compile_Download_Tool.zip?dl=0
-  or  https://120.77.81.60/svn/software/Compile_Download_Tool.zip (user:guest password:guest)
+  or  https://drive.google.com/open?id=1NwATu-Bw0u7Nec6hsmX_TTxzYJ_EBK2a
 
 ### How to use NanoFactory? 
 *Choose source code path by open the project.erw which in the source code folder; 
