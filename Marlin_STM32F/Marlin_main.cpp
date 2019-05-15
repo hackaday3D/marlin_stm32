@@ -14779,7 +14779,7 @@ void setup() {
 
 
   #if ENABLED(USE_WATCHDOG)
-   //luojin watchdog_init();
+    watchdog_init();
   #endif
 	//SET_INPUT(0xE0);
 }
@@ -14801,14 +14801,21 @@ int
 main(int argc, char* argv[])
  {
    	int filemant_stat=0;
-	
+
    	setup() ;
+	SET_OUTPUT(FAN4_PIN);
+	OUT_WRITE(FAN4_PIN,1);
 	SET_OUTPUT(FAN3_PIN);
-	OUT_WRITE(FAN3_PIN,0);
-	SET_OUTPUT(0xEC);
-	OUT_WRITE(0xEC,1);
-	SET_OUTPUT(0xEB);
-	OUT_WRITE(0xEB,0);
+	 
+/*	while(1)
+	{
+	 // OUT_WRITE(0xB7,0);
+	 // OUT_WRITE(0xB7,1);
+	  GPIO_ResetBits(GPIOB, GPIO_Pin_7);
+	  delay(0);delay(0);delay(0);delay(0);delay(0);delay(0);delay(0);
+	  GPIO_SetBits(GPIOB, GPIO_Pin_7);
+	  delay(0);delay(0);delay(0);delay(0);delay(0);delay(0);delay(0);
+	}*/
 	card_sd_in=0;
 	while(1)
 	{

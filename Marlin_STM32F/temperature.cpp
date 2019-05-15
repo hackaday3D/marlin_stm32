@@ -576,8 +576,6 @@ int Temperature::getHeaterPower(const int heater) {
 // Temperature Error Handlers
 //
 void Temperature::_temp_error(const int8_t e, const char * const serial_msg, const char * const lcd_msg) {
-#if STM32_LJ
-#else
   static bool killed =false;
   if (IsRunning()) {
     SERIAL_ERROR_START();
@@ -586,7 +584,7 @@ void Temperature::_temp_error(const int8_t e, const char * const serial_msg, con
     if (e >= 0) SERIAL_ERRORLN((int)e); else SERIAL_ERRORLNPGM(MSG_HEATER_BED);
   }
   #if DISABLED(BOGUS_TEMPERATURE_FAILSAFE_OVERRIDE)
-    static bool killed = false;
+  //  static bool killed = false;
     if (!killed) {
       Running = false;
       killed = true;
@@ -595,7 +593,6 @@ void Temperature::_temp_error(const int8_t e, const char * const serial_msg, con
     else
       disable_all_heaters(); // paranoia
   #endif
-#endif  
 }
 
 void Temperature::max_temp_error(const int8_t e) {
@@ -906,20 +903,33 @@ void Temperature::manage_heater() {
 
   void Temperature::Temperature_Handler(void)
   {
-  //////////////board temperature control
-    static int k=0,board_fan_old=0;
-	int board_fan=0;
+  //////////////board temperature control stm32_LJ
+    static int k=0,board_fan_old=0,nozzel_fan_old=0;
+	int temp_fan=0;
 	k++;
     if(k>1000*5)
     {
     	k=0;
     	Get_Temperature(3);
-		board_fan=gt[3]>65.0?1:0;
-		if(board_fan_old!=board_fan)
+		temp_fan=gt[3]>40.0?1:0;
+		if(gt[3])
 		{
-			board_fan_old=board_fan;
-			OUT_WRITE(FAN3_PIN,board_fan);
+			if(board_fan_old!=temp_fan)
+			{
+				board_fan_old=temp_fan;
+				OUT_WRITE(FAN4_PIN,temp_fan);
+			}
 		}
+		if(gt[0])
+		{
+			temp_fan=gt[0]>100.0?1:0;
+			if(nozzel_fan_old!=temp_fan)
+			{
+				nozzel_fan_old=temp_fan;
+				OUT_WRITE(FAN3_PIN,temp_fan);
+			}
+		}
+
     }
  ///////////////////
   }
@@ -1067,7 +1077,7 @@ float Temperature::analog2temp(const int raw, const uint8_t e) {
   // Derived from RepRap FiveD extruder::getTemperature()
   // For bed temperature measurement.
   float Temperature::analog2tempBed(const int raw) {
-    Get_Temperature(3);//board tmep
+     
    return   Get_Temperature(2);
     #if ENABLED(HEATER_BED_USES_THERMISTOR)
       SCAN_THERMISTOR_TABLE(BEDTEMPTABLE, BEDTEMPTABLE_LEN);

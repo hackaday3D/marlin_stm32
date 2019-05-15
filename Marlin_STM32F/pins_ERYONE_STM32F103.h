@@ -44,20 +44,20 @@
 //
 // Limit Switches
 //
-#define X_MIN_PIN           0xA6//0xE5
+#define X_MIN_PIN           0xD7//0xE5
 #ifndef X_MAX_PIN
-  #define X_MAX_PIN         0xBE//0xE4
+  #define X_MAX_PIN        // 0xBE//0xE4
 #endif
-#define Y_MIN_PIN          0xA5//0xE3
-#define Y_MAX_PIN          0xBD//0xE2
+#define Y_MIN_PIN          0xB7//0xE3
+#define Y_MAX_PIN          //0xBD//0xE2
 
-#define Z_MAX_PIN           0xBC//0xE0
+#define Z_MAX_PIN          // 0xB8//0xE0
 
 #if ENABLED(BLTOUCH)
 #define Z_MIN_PIN          0xAB//0xE1
 
 #else
-#define Z_MIN_PIN            0xA4//0xE1
+#define Z_MIN_PIN            0xE4// 0xB8//0xE1
 
 #endif
 
@@ -73,32 +73,32 @@
 //
 // Steppers
 //
-#define X_STEP_PIN         0xDC//0xE3//0xC6
-#define X_DIR_PIN          0xDB//0xDD
-#define X_ENABLE_PIN       0xC6//0xA8//38
+#define X_STEP_PIN         0xBF//0xE3//0xC6
+#define X_DIR_PIN          0xBE//0xDD
+#define X_ENABLE_PIN       0xDB//0xA8//38
 #define X_CS_PIN           53
 
-#define Y_STEP_PIN        0xE9// 0xAC
-#define Y_DIR_PIN         0xE8// 0xAB
-#define Y_ENABLE_PIN      0xED//0XAF
+#define Y_STEP_PIN        0xC6// 0xAC
+#define Y_DIR_PIN         0xDF// 0xAB
+#define Y_ENABLE_PIN      0xC7//0XAF
 #define Y_CS_PIN           49
 
-#define Z_STEP_PIN         0xC4// 0xD6
-#define Z_DIR_PIN          0xA7//0xD3
-#define Z_ENABLE_PIN       0xE7//0xA3
+#define Z_STEP_PIN         0xAB// 0xD6
+#define Z_DIR_PIN          0xAA//0xD3
+#define Z_ENABLE_PIN       0xAF//0xA3
 #define Z_CS_PIN           40
 
 
-#define E0_STEP_PIN        0xC8//0xB2
-#define E0_DIR_PIN         0xC7//0xBB
-#define E0_ENABLE_PIN      0xAA//0xC4
+#define E0_STEP_PIN        0xDD//0xB2
+#define E0_DIR_PIN         0xDC//0xBB
+#define E0_ENABLE_PIN      0xDE//0xC4
 #ifndef E0_CS_PIN
 #define E0_CS_PIN          42
 #endif
 
-#define E1_STEP_PIN        0xBC
-#define E1_DIR_PIN         0xEF
-#define E1_ENABLE_PIN      0xDA
+#define E1_STEP_PIN        0xA8
+#define E1_DIR_PIN         0xC8
+#define E1_ENABLE_PIN      0xA9
 #ifndef E1_CS_PIN
 #define E1_CS_PIN          44
 #endif
@@ -216,18 +216,18 @@
 //  #define RAMPS_D10_PIN  0xA1// GPIOB+GPIO_Pin_0  heater pin
 //#endif
 
-#define HEATER_0_PIN     0xA1
+#define HEATER_0_PIN     0xD3
 
 #if EXTRUDERS > 1
-#define HEATER_1_PIN     0xA0
+#define HEATER_1_PIN    0xA0// 0xD1
 #endif
-#define FAN_PIN         0xBB
-#define FAN1_PIN        0xAF
-#define FAN2_PIN        0xE5
-#define FAN3_PIN        0xE6
-#define FAN4_PIN        0xCF
+#define FAN_PIN         0xA2
+#define FAN1_PIN        0xA3
+#define FAN2_PIN        0xA1
+#define FAN3_PIN        0xD1//0xA0
+#define FAN4_PIN        0xDA
 
-#define HEATER_BED_PIN 0xA2
+#define HEATER_BED_PIN 0xD0
 #define FAN_SOFT_PWM
 #if ENABLED(IS_RAMPS_EFB)                      // Hotend, Fan, Bed
 
@@ -376,23 +376,23 @@
         #define DOGLCD_A0       LCD_PINS_DC
       #else //stm32
 	  	#ifdef REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
-	        #define LCD_PINS_RS     0xD7//0xC6// 0xDA//0xE6 //T_PEN
-	        #define LCD_PINS_ENABLE  0xD3//0xEF //D11
-	        #define LCD_PINS_D4       0xAB //0xC8 //D19
+	        #define LCD_PINS_RS     0xEE//0xC6// 0xDA//0xE6 //T_PEN
+	        #define LCD_PINS_ENABLE  0xBA//0xEF //D11
+	        #define LCD_PINS_D4       0xBB //0xC8 //D19
         #else
-			#define LCD_PINS_RS     0xD7 //T_PEN
-	        #define LCD_PINS_ENABLE 0xD3 //D11
-	        #define LCD_PINS_D4     0xAB //D13
-	        #define LCD_PINS_D5     0xD1 //D14
-	        #define LCD_PINS_D6     0xAC //D15
-			#define LCD_PINS_D7     0xD0//D12
+			#define LCD_PINS_RS     0xEE //T_PEN
+	        #define LCD_PINS_ENABLE 0xBA //D11
+	        #define LCD_PINS_D4     0xBB //D13
+	        #define LCD_PINS_D5     0xED //D14
+	        #define LCD_PINS_D6     0xBC //D15
+			#define LCD_PINS_D7     0xEC//D12
 
 		#endif
 
 		
        //
 		 ///////////////////
-   #define SD_DETECT_PIN   0xB9 // 0xC7//49
+   #define SD_DETECT_PIN   0xA4 // 0xC7//49
    #define SD_SPI_SCK	0xB3//0xA5//
    #define SD_SPI_MISO	 0xB4// 0xA6
    #define SD_SPI_MOSI	 0xB5//0xA7
@@ -431,11 +431,11 @@
   // LCD Display input pins
   //
   #if ENABLED(NEWPANEL)
-   #define BEEPER_PIN		  0xD4//0xEC
-   #define BTN_ENC 		0xD2//0xED
+   #define BEEPER_PIN		  0xBD//0xEC
+   #define BTN_ENC 		0xEF//0xED
  
-   #define BTN_EN1 		0xB7//0xE9
-   #define BTN_EN2 		0xB8//0xE8
+   #define BTN_EN1 		0xA5//0xE9
+   #define BTN_EN2 		0xA6//0xE8
 
     #if ENABLED(REPRAP_DISCOUNT_SMART_CONTROLLER)
 
