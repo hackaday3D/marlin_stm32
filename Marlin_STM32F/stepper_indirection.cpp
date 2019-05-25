@@ -429,7 +429,7 @@ MarlinSerial customizedSerial5;
     st.mstep_reg_select(true); // Select microsteps with UART
     st.I_scale_analog(false);
      st.rms_current(mA, HOLD_MULTIPLIER, R_SENSE);
-  st.microsteps(microsteps);
+  st.microsteps(microsteps );
  //  st.microsteps(2);
     st.blank_time(24);
     st.toff(5);

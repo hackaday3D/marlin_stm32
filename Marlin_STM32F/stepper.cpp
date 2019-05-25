@@ -1356,6 +1356,9 @@ void Stepper::isr() {
 
   // Don't forget to finally reenable interrupts
   ENABLE_ISRS();
+    
+
+  
 }
 
 /**

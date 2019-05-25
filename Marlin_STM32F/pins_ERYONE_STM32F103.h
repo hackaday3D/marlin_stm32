@@ -57,7 +57,7 @@
 #define Z_MIN_PIN          0xAB//0xE1
 
 #else
-#define Z_MIN_PIN            0xE4// 0xB8//0xE1
+#define Z_MIN_PIN            0xB8//0xE1
 
 #endif
 
@@ -219,12 +219,12 @@
 #define HEATER_0_PIN     0xD3
 
 #if EXTRUDERS > 1
-#define HEATER_1_PIN    0xA0// 0xD1
+#define HEATER_1_PIN     0xD1
 #endif
 #define FAN_PIN         0xA2
 #define FAN1_PIN        0xA3
 #define FAN2_PIN        0xA1
-#define FAN3_PIN        0xD1//0xA0
+#define FAN3_PIN        0xA0
 #define FAN4_PIN        0xDA
 
 #define HEATER_BED_PIN 0xD0
@@ -377,13 +377,13 @@
       #else //stm32
 	  	#ifdef REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
 	        #define LCD_PINS_RS     0xEE//0xC6// 0xDA//0xE6 //T_PEN
-	        #define LCD_PINS_ENABLE  0xBA//0xEF //D11
+	        #define LCD_PINS_ENABLE  0xEF//0xBA//0xEF //D11
 	        #define LCD_PINS_D4       0xBB //0xC8 //D19
         #else
 			#define LCD_PINS_RS     0xEE //T_PEN
 	        #define LCD_PINS_ENABLE 0xBA //D11
 	        #define LCD_PINS_D4     0xBB //D13
-	        #define LCD_PINS_D5     0xED //D14
+	        #define LCD_PINS_D5     0xEC//0xED //D14
 	        #define LCD_PINS_D6     0xBC //D15
 			#define LCD_PINS_D7     0xEC//D12
 
@@ -432,7 +432,7 @@
   //
   #if ENABLED(NEWPANEL)
    #define BEEPER_PIN		  0xBD//0xEC
-   #define BTN_ENC 		0xEF//0xED
+   #define BTN_ENC 		0xBC//0xEF//0xED
  
    #define BTN_EN1 		0xA5//0xE9
    #define BTN_EN2 		0xA6//0xE8

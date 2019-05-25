@@ -39,7 +39,9 @@ temperature.o: ../temperature.cpp ../Marlin.h ../MarlinConfig.h \
  ../system/include/stm32f1-stdperiph/stm32f10x_usart.h ../temperature.h \
  ../thermistortables.h ../thermistortable_1.h ../thermistortable_13.h \
  ../ultralcd.h ../planner.h ../printcounter.h ../stopwatch.h ../delay.h \
- ../endstops.h ../watchdog.h
+ ../endstops.h ../stepper.h ../speed_lookuptable.h \
+ ../stepper_indirection.h ../TMC2208Stepper/TMC2208Stepper.h \
+ ../TMC2208Stepper/../MarlinSerial.h ../watchdog.h
 
 ../Marlin.h:
 
@@ -174,5 +176,15 @@ temperature.o: ../temperature.cpp ../Marlin.h ../MarlinConfig.h \
 ../delay.h:
 
 ../endstops.h:
+
+../stepper.h:
+
+../speed_lookuptable.h:
+
+../stepper_indirection.h:
+
+../TMC2208Stepper/TMC2208Stepper.h:
+
+../TMC2208Stepper/../MarlinSerial.h:
 
 ../watchdog.h:
