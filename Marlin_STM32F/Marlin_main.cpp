@@ -14804,7 +14804,7 @@ main(int argc, char* argv[])
 
    	setup() ;
 	SET_OUTPUT(FAN4_PIN);
-	OUT_WRITE(FAN4_PIN,1);
+	OUT_WRITE(FAN4_PIN,0);
 	SET_OUTPUT(FAN3_PIN);
 	 
 /*	while(1)

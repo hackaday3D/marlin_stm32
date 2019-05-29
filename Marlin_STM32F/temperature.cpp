@@ -941,6 +941,7 @@ void Temperature::manage_heater() {
 ***Output: 
 ***Return:robert
 ***********************************************************/
+
 float Temperature::Get_Temperature(u8 hot_heat_num)
 {
     int j=0;
@@ -1256,6 +1257,7 @@ void Temperature::init() {
   HAL_adc_init();
  // HAL_ANALOG_SELECT(TEMP_2_PIN);
   //HAL_START_ADC(TEMP_2_PIN);
+  HAL_ANALOG_SELECT(TEMP_BOARD_PIN);
 
   #if HAS_TEMP_ADC_0
     HAL_ANALOG_SELECT(TEMP_0_PIN);
