@@ -1,0 +1,1 @@
+https://github.com/hackaday3D/marlin_stm32/wiki/Wiring-thinker32-board-to-Creality-ender3-printer
