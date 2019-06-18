@@ -147,8 +147,59 @@ static inline void handle_interrupts(timer16_Sequence_t timer, volatile uint16_t
 
 
 
+#define PWM_FREQENCY  4000*5
 static void initISR(timer16_Sequence_t timer) {
 #if STM32_LJ
+
+	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
+    TIM_OCInitTypeDef  TIM_OCInitStructure;
+	GPIO_InitTypeDef GPIO_InitStructure;
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE); //ʹ�� TIMx ����
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE); //ʹ�� PB ʱ��
+
+    /* ����TIM4CLKΪ72MHZ */
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
+
+    /* GPIOB clock enable, Enable AFIO function */
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB | RCC_APB2Periph_AFIO, ENABLE);
+    
+    /* PB6,7,8,9 -> timer4: Config to PWM output mode */
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;            // �����������
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    
+    GPIO_InitStructure.GPIO_Pin =   GPIO_Pin_9;
+    GPIO_Init(GPIOB, &GPIO_InitStructure);  
+	///////////////////
+	
+	TIM_DeInit(TIM4);
+    TIM_InternalClockConfig(TIM4);  
+    
+    /* Time base configuration */    
+    TIM_TimeBaseStructure.TIM_Prescaler = 35; //(72-1);       // prescaler = 71, TIM_CLK = 72MHZ/(71+1) = 1MHZ.    
+    TIM_TimeBaseStructure.TIM_Period = PWM_FREQENCY -1 ;         // ����ʱ����0������999����Ϊ1000�Σ�Ϊһ����ʱ����
+                                                    // pwm F = 1MHZ/(3999+1) = 250HZ.  
+    TIM_TimeBaseStructure.TIM_ClockDivision =100;// TIM_CKD_DIV1 ;    //����ʱ�ӷ�Ƶϵ��������Ƶ(�����ò���)
+    TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  //���ϼ���ģʽ
+    TIM_TimeBaseInit(TIM4, &TIM_TimeBaseStructure);
+    
+    TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;       //����ΪPWMģʽ1
+    TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;  //����ʱ������ֵС��CCR1_ValʱΪ�ߵ�ƽ
+
+
+    /* PWM1 Mode configuration: Channel4 */
+    TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+    TIM_OCInitStructure.TIM_Pulse = 0;//(1000 * PWM_FREQENCY )/100;            //����ͨ��4�ĵ�ƽ����ֵ���������һ��ռ�ձȵ�PWM
+    TIM_OC4Init(TIM4, &TIM_OCInitStructure);                        //ʹ��ͨ��4
+    TIM_OC4PreloadConfig(TIM4, TIM_OCPreload_Enable);
+
+    TIM_ARRPreloadConfig(TIM4, ENABLE);                                // ʹ��TIM3���ؼĴ���ARR
+	TIM_CtrlPWMOutputs(TIM4,ENABLE);  //MOE �����ʹ��,�߼���ʱ�����뿪��
+
+    /* TIM4 enable counter */
+    TIM_Cmd(TIM4, ENABLE);                                         //ʹ�ܶ�ʱ��4
+
+
+ 
 
 #else
 
@@ -269,7 +320,7 @@ int8_t Servo::attach(const int pin, const int min, const int max) {
   if (this->servoIndex >= MAX_SERVOS) return -1;
 
   if (pin > 0) servo_info[this->servoIndex].Pin.nbr = pin;
-  pinMode(servo_info[this->servoIndex].Pin.nbr, OUTPUT); // set servo pin to output
+ //robert pinMode(servo_info[this->servoIndex].Pin.nbr, OUTPUT); // set servo pin to output
 
   // todo min/max check: ABS(min - MIN_PULSE_WIDTH) /4 < 128
   this->min = (MIN_PULSE_WIDTH - min) / 4; //resolution of min/max is 4 uS
@@ -293,7 +344,8 @@ void Servo::write(int value) {
 #if STM32_LJ	
 	if (value < MIN_PULSE_WIDTH) { // treat values less than 544 as angles in degrees (valid values in microseconds are handled as microseconds)
 	  value = map(constrain(value, 0, 180), 0, 180, 500, 2500);
-	  TIM_SetCompare2(TIM1, value); //
+	  TIM_SetCompare4(TIM4, value); //
+	//  TIM_SetCompare4(TIM4, (( value * (PWM_FREQENCY/100))));
 	}
 #else	 
 	if (value < MIN_PULSE_WIDTH) { // treat values less than 544 as angles in degrees (valid values in microseconds are handled as microseconds)

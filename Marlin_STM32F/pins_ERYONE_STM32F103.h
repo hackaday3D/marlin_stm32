@@ -33,7 +33,7 @@
 // Servos
 //
 
-#define SERVO0_PIN       0xBD// 0xBE
+#define SERVO0_PIN       0xB9// 0xBE
 
 //#define SERVO1_PIN          6
 //#define SERVO2_PIN          5
@@ -54,7 +54,7 @@
 #define Z_MAX_PIN          // 0xB8//0xE0
 
 #if ENABLED(BLTOUCH)
-#define Z_MIN_PIN          0xAB//0xE1
+#define Z_MIN_PIN           0xE4
 
 #else
 #define Z_MIN_PIN            0xB8//0xE1

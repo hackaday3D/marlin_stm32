@@ -1380,7 +1380,7 @@ void Temperature::init() {
     //robert   TEMP_MIN_ROUTINE(1);
     #endif
     #ifdef HEATER_1_MAXTEMP
-      TEMP_MAX_ROUTINE(1);
+    //robert TEMP_MAX_ROUTINE(1);
     #endif
     #if HOTENDS > 2
       #ifdef HEATER_2_MINTEMP
