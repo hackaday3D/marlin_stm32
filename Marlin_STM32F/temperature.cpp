@@ -1923,8 +1923,9 @@ void Temperature::readings_ready() {
         target_temperature_bed
       #endif
     ;
-    if (current_temperature_bed_raw GEBED bed_maxttemp_raw && bed_on) max_temp_error(-1);
-    if (bed_minttemp_raw GEBED current_temperature_bed_raw && bed_on) min_temp_error(-1);
+    if (current_temperature_bed_raw GEBED bed_maxttemp_raw && bed_on&&current_temperature_bed_raw)
+    	max_temp_error(-1);
+    if (bed_minttemp_raw GEBED current_temperature_bed_raw && bed_on&&bed_minttemp_raw) min_temp_error(-1);
   #endif
 }
 
