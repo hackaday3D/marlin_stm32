@@ -173,7 +173,7 @@ int16_t Temperature::current_temperature_raw[HOTENDS] = { 0 },
   float Temperature::redundant_temperature = 0.0;
 #endif
 
-volatile bool Temperature::temp_meas_ready = false;
+volatile bool Temperature::temp_meas_ready =   false;
 
 #if ENABLED(PIDTEMP)
   float Temperature::temp_iState[HOTENDS] = { 0 },
@@ -327,6 +327,7 @@ uint8_t Temperature::soft_pwm_amount[HOTENDS];
     while (wait_for_heatup) {
 
       const millis_t ms = millis();
+	  watchdog_reset();
 
       if (temp_meas_ready) { // temp sample ready
         updateTemperaturesFromRawValues();

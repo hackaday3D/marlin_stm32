@@ -306,7 +306,7 @@ inline void HAL_adc_init(void) {
 #endif
 
 #define HAL_READ_ADC()  ADC
-#define HAL_ADC_READY() !TEST(ADCSRA, ADSC)
+#define HAL_ADC_READY()  true// robert !TEST(ADCSRA, ADSC)
 
 #define GET_PIN_MAP_PIN(index) index
 #define GET_PIN_MAP_INDEX(pin) pin
